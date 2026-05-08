@@ -8,12 +8,9 @@ export const EXAMPLE_BRIEF = {
     accent: '#FF6B5B',
     headingFont: 'Noto Sans TC Bold',
     bodyFont: 'Noto Serif TC',
+    designTerms: ['flat_icons', 'high_negative_space', 'infographic_first', 'data_badges'],
     notes: `輔助色使用鐵灰色與淺灰色進行區塊分割。
-主色 #003366 象徵專業權威；強調色用於關鍵數據（如重症、住院率）。
-使用資訊圖表（Infographics）為主，而非單純文字。
-關鍵數據需以「大字級」突顯，並放置於圓形框內。
-圖示要求：儘量使用簡潔的扁平化圖示（Flat Icons）。
-背景應保持潔白，維持高負空間感（Negative Space），提升可讀性。`,
+主色 #003366 象徵專業權威；強調色用於關鍵數據（如重症、住院率）。`,
   },
 
   en: {
@@ -22,12 +19,9 @@ export const EXAMPLE_BRIEF = {
     accent: '#FF6B5B',
     headingFont: 'Noto Sans TC Bold',
     bodyFont: 'Noto Serif TC',
+    designTerms: ['flat_icons', 'high_negative_space', 'infographic_first', 'data_badges'],
     notes: `Secondary palette: iron-gray and light-gray for section dividers.
-The primary #003366 conveys authority; the accent is reserved for key metrics (e.g. severe cases, hospitalization rate).
-Lead with infographics, not plain text.
-Key numbers in large display type, placed inside circular badges.
-Iconography: simple flat icons only.
-Maintain a clean white background and ample negative space for readability.`,
+The primary #003366 conveys authority; the accent is reserved for key metrics (e.g. severe cases, hospitalization rate).`,
   },
 }
 
@@ -37,5 +31,6 @@ export const EMPTY_BRIEF = {
   accent: '',
   headingFont: '',
   bodyFont: '',
+  designTerms: [],
   notes: '',
 }

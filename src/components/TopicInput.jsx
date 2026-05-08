@@ -10,8 +10,8 @@ export function TopicInput({ value, onChange, language }) {
         rows={3}
         placeholder={
           language === 'cn'
-            ? '例如：機器學習在醫療影像辨識的應用'
-            : 'e.g., Applications of ML in medical imaging'
+            ? '例如：2026 年第 18 週台灣呼吸道病毒監測週報，供內部風險評估會議使用'
+            : 'e.g., Taiwan respiratory virus surveillance report, Week 18 2026, for internal risk assessment'
         }
         className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 resize-y"
       />

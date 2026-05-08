@@ -1,6 +1,8 @@
 // 把 visualBrief 物件組成可貼進 prompt 的區塊。
 // 任何欄位空著就跳過；全空就回傳空字串（template 那邊會整段消失）。
 
+import { designTermById } from '../data/designTerms.js'
+
 export function buildVisualBriefBlock(brief, language) {
   const t = (cn, en) => (language === 'cn' ? cn : en)
 
@@ -12,17 +14,25 @@ export function buildVisualBriefBlock(brief, language) {
   if (brief.headingFont) bullets.push(`- ${t('標題字型', 'Heading font')}：${brief.headingFont}`)
   if (brief.bodyFont) bullets.push(`- ${t('正文字型', 'Body font')}：${brief.bodyFont}`)
 
+  const selectedTerms = Array.isArray(brief.designTerms)
+    ? brief.designTerms
+        .map((id) => designTermById(id))
+        .filter(Boolean)
+        .map((term) => `- ${term.label[language] || term.label.cn}：${term.prompt[language] || term.prompt.cn}`)
+    : []
   const notes = (brief.notes || '').trim()
-  if (bullets.length === 0 && !notes) return ''
+  if (bullets.length === 0 && selectedTerms.length === 0 && !notes) return ''
 
   const heading = t(
     '**視覺細部要求（使用者自訂，優先於前述風格／配色）：**',
     '**Detailed Visual Spec (user-provided, takes priority over the style/palette above):**'
   )
+  const termsLabel = t('設計語彙：', 'Design terms:')
   const otherLabel = t('其他要求：', 'Other notes:')
 
   const parts = [heading]
   if (bullets.length) parts.push(bullets.join('\n'))
+  if (selectedTerms.length) parts.push(`${termsLabel}\n${selectedTerms.join('\n')}`)
   if (notes) parts.push(`${otherLabel}\n${notes}`)
   return '\n' + parts.join('\n\n') + '\n'
 }

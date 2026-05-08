@@ -1,6 +1,7 @@
 import { useLocalStorage } from './useLocalStorage.js'
 
 const STORAGE_KEY = 'spb_saved_prompts_v1'
+const SAVED_PROMPT_SCHEMA_VERSION = 2
 
 export function useSavedPrompts() {
   const [savedPrompts, setSavedPrompts] = useLocalStorage(STORAGE_KEY, [])
@@ -8,6 +9,7 @@ export function useSavedPrompts() {
   const savePrompt = (data) => {
     const item = {
       id: `sp_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+      schemaVersion: SAVED_PROMPT_SCHEMA_VERSION,
       createdAt: Date.now(),
       ...data,
     }

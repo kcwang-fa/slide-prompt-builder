@@ -1,5 +1,5 @@
 // 預設色板：每組是經過搭配的 background / primary / accent 三色組合。
-// `suitableFor` 列出這套色板適合搭配的 slide_style id；會被用來在 UI 上標「對應你的風格」。
+// `suitableFor` 列出這套色板適合搭配的 slide_style id；會被用來在 UI 上標「對應你的用途」。
 
 export const PALETTES = [
   {
@@ -9,7 +9,7 @@ export const PALETTES = [
     primary: '#003366',
     accent: '#FF6B5B',
     description: { cn: '深海藍＋珊瑚橙，白底', en: 'Deep navy + coral on white' },
-    suitableFor: ['meeting', 'minimal'],
+    suitableFor: ['meeting', 'training', 'minimal'],
   },
   {
     id: 'corporate',
@@ -36,7 +36,7 @@ export const PALETTES = [
     primary: '#D2691E',
     accent: '#5B8A72',
     description: { cn: '暖橘＋森林綠', en: 'Warm orange + sage green' },
-    suitableFor: ['teaching', 'sketchnote'],
+    suitableFor: ['training', 'teaching', 'sketchnote'],
   },
   {
     id: 'ted',
@@ -45,7 +45,7 @@ export const PALETTES = [
     primary: '#000000',
     accent: '#E62B1E',
     description: { cn: '純黑＋TED 紅', en: 'Pure black + TED red' },
-    suitableFor: ['teaching', 'minimal'],
+    suitableFor: ['training', 'teaching', 'minimal'],
   },
   {
     id: 'darktech',
@@ -63,7 +63,7 @@ export const PALETTES = [
     primary: '#2C3E50',
     accent: '#E67E22',
     description: { cn: '米白＋深藍灰＋活力橘', en: 'Cream + slate + zest' },
-    suitableFor: ['sketchnote', 'teaching'],
+    suitableFor: ['sketchnote', 'training', 'teaching'],
   },
   {
     id: 'forest',

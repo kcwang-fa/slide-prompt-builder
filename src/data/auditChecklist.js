@@ -73,7 +73,12 @@ export const AUDIT_CHECKLIST_ITEMS = [
   },
 ]
 
+const DEFAULT_ENABLED_AUDIT_ITEM_IDS = new Set([
+  'no_external_inference',
+  'neutral_tone',
+])
+
 export const DEFAULT_AUDIT_CHECKLIST = AUDIT_CHECKLIST_ITEMS.reduce((acc, item) => {
-  acc[item.id] = true
+  acc[item.id] = DEFAULT_ENABLED_AUDIT_ITEM_IDS.has(item.id)
   return acc
 }, {})

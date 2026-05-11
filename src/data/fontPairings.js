@@ -7,7 +7,7 @@ export const FONT_PAIRINGS = [
     name: { cn: 'Noto Sans TC + Inter', en: 'Noto Sans TC + Inter' },
     headingFont: 'Noto Sans TC Bold（中文）+ Inter SemiBold（英文數字）',
     bodyFont: 'Noto Sans TC（中文）+ Inter（英文數字）',
-    suitableFor: ['meeting', 'teaching'],
+    suitableFor: ['meeting', 'training', 'teaching'],
   },
   {
     id: 'serif_academic',
@@ -42,6 +42,6 @@ export const FONT_PAIRINGS = [
     name: { cn: '微軟正黑體 + Inter', en: 'Microsoft JhengHei + Inter' },
     headingFont: '微軟正黑體 Bold（中文）+ Inter Bold（英文數字）',
     bodyFont: '微軟正黑體（中文）+ Inter（英文數字）',
-    suitableFor: ['meeting', 'minimal'],
+    suitableFor: ['meeting', 'training', 'minimal'],
   },
 ]

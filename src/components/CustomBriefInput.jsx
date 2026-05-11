@@ -89,7 +89,7 @@ function PaletteChip({ palette, onApply, isMatch, isActive, language }) {
       <span className="text-[11px] font-bold text-zinc-700">{palette.name[language]}</span>
       {isMatch && (
         <span className="text-[9px] text-orange-600 font-bold">
-          {language === 'cn' ? '✓ 對應風格' : '✓ matches style'}
+          {language === 'cn' ? '✓ 對應用途' : '✓ matches purpose'}
         </span>
       )}
     </button>
@@ -113,7 +113,7 @@ function PairingChip({ pairing, onApply, isMatch, isActive, language }) {
       </span>
       {isMatch && (
         <span className="text-[9px] text-orange-600 font-bold">
-          {language === 'cn' ? '✓ 對應風格' : '✓ matches style'}
+          {language === 'cn' ? '✓ 對應用途' : '✓ matches purpose'}
         </span>
       )}
     </button>
@@ -192,7 +192,7 @@ export function CustomBriefInput({ value, onChange, language, slideStyle, forceO
     })
   }
 
-  // 將「對應目前風格」的選項排在前面
+  // 將「對應目前用途」的選項排在前面
   const sortedPalettes = [...PALETTES].sort((a, b) => {
     const aMatch = a.suitableFor.includes(slideStyle)
     const bMatch = b.suitableFor.includes(slideStyle)

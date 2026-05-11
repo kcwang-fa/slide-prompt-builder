@@ -4,7 +4,7 @@ import { CheckSquare, Construction, FileText, Image as ImageIcon, Palette, Prese
 import { BANKS, optionLabel } from './data/banks.js'
 import { NOTEBOOKLM_TEMPLATE } from './data/template.js'
 import { EMPTY_BRIEF } from './data/exampleBrief.js'
-import { DEFAULT_AUDIT_CHECKLIST } from './data/auditChecklist.js'
+import { AUDIT_CHECKLIST_ITEMS, DEFAULT_AUDIT_CHECKLIST } from './data/auditChecklist.js'
 import { render } from './lib/render.js'
 import { buildVisualBriefBlock } from './lib/visualBrief.js'
 import { buildAuditChecklistBlock } from './lib/auditChecklist.js'
@@ -24,7 +24,11 @@ import { SavedPromptsPanel } from './components/SavedPromptsPanel.jsx'
 const DEFAULT_SELECTIONS = {
   slide_style: 'meeting',
   slide_audience: 'team',
+  slide_style_custom: '',
+  slide_audience_custom: '',
 }
+
+const AUDIT_CHECKLIST_DEFAULTS_MIGRATION_KEY = 'spb_audit_checklist_defaults_v2_migrated'
 
 const LEGACY_STYLE_FALLBACK = {
   professional: 'meeting',
@@ -54,6 +58,15 @@ const OUTPUT_MODES = [
     description: { cn: 'Nano Banana / ChatGPT Image', en: 'Nano Banana / ChatGPT Image' },
   },
 ]
+
+function isLegacyAllCheckedAuditChecklist(value) {
+  return AUDIT_CHECKLIST_ITEMS.every((item) => value?.[item.id] === true)
+}
+
+function selectionText(bankKey, optionId, customText, language) {
+  if (optionId === 'custom' && customText?.trim()) return customText.trim()
+  return optionLabel(bankKey, optionId, language)
+}
 
 function ImageModePlaceholder({ language }) {
   return (
@@ -123,6 +136,18 @@ export default function App() {
   const { savedPrompts, savePrompt, deletePrompt, renamePrompt } = useSavedPrompts()
 
   useEffect(() => {
+    try {
+      if (localStorage.getItem(AUDIT_CHECKLIST_DEFAULTS_MIGRATION_KEY) === 'true') return
+      localStorage.setItem(AUDIT_CHECKLIST_DEFAULTS_MIGRATION_KEY, 'true')
+    } catch {
+      return
+    }
+
+    if (!isLegacyAllCheckedAuditChecklist(auditChecklist)) return
+    setAuditChecklist(DEFAULT_AUDIT_CHECKLIST)
+  }, [auditChecklist, setAuditChecklist])
+
+  useEffect(() => {
     if (OUTPUT_MODES.some((mode) => mode.id === outputMode)) return
     setOutputMode('presentation')
   }, [outputMode, setOutputMode])
@@ -151,11 +176,13 @@ export default function App() {
     const slideAudience = optionLabel('slide_audience', selections.slide_audience, language)
       ? selections.slide_audience
       : DEFAULT_SELECTIONS.slide_audience
+    const slideStyleText = selectionText('slide_style', slideStyle, selections.slide_style_custom, language)
+    const slideAudienceText = selectionText('slide_audience', slideAudience, selections.slide_audience_custom, language)
     const tpl = NOTEBOOKLM_TEMPLATE[language] || NOTEBOOKLM_TEMPLATE.cn
     return render(tpl, {
       topic: topic.trim() || (language === 'cn' ? '（請填寫主題）' : '(topic placeholder)'),
-      slide_style: optionLabel('slide_style', slideStyle, language),
-      slide_audience: optionLabel('slide_audience', slideAudience, language),
+      slide_style: slideStyleText,
+      slide_audience: slideAudienceText,
       section_count: String(sectionCount),
       custom_brief_block: buildVisualBriefBlock(visualBrief, language),
       audit_checklist_block: buildAuditChecklistBlock(auditChecklist, language),
@@ -252,24 +279,28 @@ export default function App() {
               <div className="space-y-6" role="tabpanel">
                 <TopicInput value={topic} onChange={setTopic} language={language} />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-5">
                   <VariableSelect
                     bankKey="slide_style"
                     value={selections.slide_style}
                     onChange={(v) => updateSelection('slide_style', v)}
+                    customValue={selections.slide_style_custom || ''}
+                    onCustomChange={(v) => updateSelection('slide_style_custom', v)}
                     language={language}
                   />
                   <VariableSelect
                     bankKey="slide_audience"
                     value={selections.slide_audience}
                     onChange={(v) => updateSelection('slide_audience', v)}
+                    customValue={selections.slide_audience_custom || ''}
+                    onCustomChange={(v) => updateSelection('slide_audience_custom', v)}
                     language={language}
                   />
                 </div>
                 <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
                   {language === 'cn'
-                    ? '簡報風格主要控制版面、資訊密度與視覺語氣；目標讀者主要控制術語深度、解釋程度與決策重點。若兩者看似衝突，請以目標讀者的理解需求優先。'
-                    : 'Slide style controls layout, density, and visual tone; target audience controls terminology depth, explanation level, and decision emphasis. If they conflict, prioritize the audience’s comprehension needs.'}
+                    ? '簡報用途決定內容結構、資訊密度與任務重點；讀者背景決定術語深度、解釋程度與決策情境。若兩者看似衝突，請以讀者背景的理解需求優先。'
+                    : 'Deck purpose controls structure, density, and task emphasis; audience background controls terminology depth, explanation level, and decision context. If they conflict, prioritize the audience’s comprehension needs.'}
                 </div>
                 <SectionCountSlider
                   value={sectionCount}

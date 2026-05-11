@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A single-page tool that composes a structured prompt for **NotebookLM**'s slide-deck generation. The user picks a presentation style, target audience, and section count; optionally fine-tunes color palette + font pairing in an "advanced visual brief" panel; and copies the resulting prompt into NotebookLM. Everything is client-side — no backend, no router, no AI calls. Vite + React 18 + Tailwind, ~600 lines of source.
+A single-page tool that composes a structured prompt for **NotebookLM**'s slide-deck generation. The user picks a deck purpose, audience background, section count, and review checklist; optionally fine-tunes color palette, font pairing, design terms, and freeform visual notes; and copies the resulting prompt into NotebookLM. Everything is client-side — no backend, no router, no AI calls. Vite + React 18 + Tailwind.
 
 This project was forked-in-spirit from `~/PromptFill` (a much larger AI-art prompt-fill tool) but is **intentionally minimal**: only the variable+template engine concept was kept. Do not import Prompt Fill's masonry, html2canvas export, IndexedDB, video preview, AI services, sharing, or smart-split features unless explicitly asked.
 
@@ -23,36 +23,42 @@ There is no lint config and no test suite. The validation gate is "open it in th
 
 ### State model
 
-All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, debounced via React render). Five top-level pieces:
+All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, debounced via React render). Main top-level pieces:
 
 - `language` — `'cn'` / `'en'`
-- `selections` — `{ slide_style, slide_audience }`. Was `{ slide_style, slide_color, slide_audience }` until `slide_color` was removed; the advanced palette picker fully replaced it.
+- `outputMode` — `'presentation'` / `'image'`. Image mode is currently a placeholder.
+- `activeTab` — workspace tab id (`basic`, `visual`, `audit`, `prompt`).
+- `selections` — `{ slide_style, slide_audience, slide_style_custom, slide_audience_custom }`. The legacy key names remain for compatibility, but the UI labels are now **簡報用途** and **讀者背景**. `slide_style_custom` and `slide_audience_custom` are used only when the corresponding option id is `'custom'`.
 - `topic` — free text
 - `sectionCount` — integer 3–10 (drives **body sections**, not total slide count; see UI section below)
-- `visualBrief` — structured object: `{ background, primary, accent, headingFont, bodyFont, notes }`. All fields optional. **This shape replaced an earlier flat string `customBrief`** — the loader in `handleLoad` migrates old saved prompts (`item.customBrief: string` → `visualBrief.notes`).
+- `visualBrief` — structured object: `{ background, primary, accent, headingFont, bodyFont, designTerms, notes }`. All fields optional. **This shape replaced an earlier flat string `customBrief`** — the loader in `handleLoad` migrates old saved prompts (`item.customBrief: string` → `visualBrief.notes`).
+- `auditChecklist` — object keyed by item id. Default checked items are only `no_external_inference` and `neutral_tone`; all other review items start unchecked. A one-time migration in `App.jsx` moves old "everything checked" LocalStorage state to the new default.
 
-Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. Each entry stores `{ id, name, createdAt, topic, selections, sectionCount, visualBrief }`. Managed by `hooks/useSavedPrompts.js`.
+Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. New entries use `schemaVersion: 2` and store `{ id, schemaVersion, name, createdAt, topic, selections, sectionCount, visualBrief, auditChecklist, outputMode }`. Managed by `hooks/useSavedPrompts.js`.
 
 ### Two parallel control surfaces
 
-The UI has two distinct ways to influence the output, and the prompt template encodes a precedence rule:
+The UI has three distinct ways to influence the output, and the prompt template encodes a precedence rule:
 
-1. **Basic flow** (always visible): style + audience + section count.
+1. **Basic flow** (always visible): deck purpose + audience background + section count.
 2. **Advanced visual brief** (`<CustomBriefInput>`, collapsed by default): palette swatches, hex pickers, font pairings, freeform notes.
+3. **Review checklist** (`<AuditChecklist>`): optional professional review constraints appended near the citation/fidelity section.
 
-The basic style description goes into the prompt as a one-line bullet. If the advanced brief has any non-empty field, it appends a `**視覺細部要求（使用者自訂，優先於前述風格／配色）：**` block right after the basic style line. The "優先於前述" wording is what lets a user pick "深色科技風" basic + "白色背景 + #003366" advanced without contradictory instructions confusing NotebookLM.
+The basic purpose and audience descriptions go into the prompt as bullets. If the user selects the `custom` card and types text, `App.jsx` passes the custom text into the template instead of the stock option label. If the advanced brief has any non-empty field, it appends a `**視覺細部要求（使用者自訂，優先於前述風格／配色）：**` block right after the purpose section. The "優先於前述" wording is what lets a user pick a broad purpose and then override specific visual details without contradictory instructions confusing NotebookLM.
 
-### Style-aware suggestion sorting
+### Purpose-aware suggestion sorting
 
-`PALETTES` (`src/data/palettes.js`) and `FONT_PAIRINGS` (`src/data/fontPairings.js`) each carry a `suitableFor: ['professional', 'minimal', …]` array of `slide_style` ids. `CustomBriefInput` receives the current `slideStyle` prop and sorts both lists so matching options come first, with an orange "✓ 對應風格" badge. Adding a new palette or pairing? Don't forget the `suitableFor` field, otherwise it'll always sort to the bottom.
+`PALETTES` (`src/data/palettes.js`) and `FONT_PAIRINGS` (`src/data/fontPairings.js`) each carry a `suitableFor: ['meeting', 'training', …]` array of `slide_style` ids. `CustomBriefInput` receives the current `slideStyle` prop and sorts both lists so matching options come first, with an orange "✓ 對應用途" badge. Adding a new deck purpose, palette, or pairing? Don't forget the `suitableFor` field, otherwise it will sort to the bottom for that purpose.
 
 ### Prompt template & render
 
-`src/data/template.js` exports `NOTEBOOKLM_TEMPLATE = { cn, en }` — two strings with `{{placeholder}}` slots: `{{topic}}`, `{{slide_style}}`, `{{slide_audience}}`, `{{section_count}}`, `{{custom_brief_block}}`.
+`src/data/template.js` exports `NOTEBOOKLM_TEMPLATE = { cn, en }` — two strings with `{{placeholder}}` slots: `{{topic}}`, `{{slide_style}}`, `{{slide_audience}}`, `{{section_count}}`, `{{custom_brief_block}}`, `{{audit_checklist_block}}`.
 
 `src/lib/render.js` does the substitution. **Important quirk**: empty string substitutes as empty (not as the literal `{{key}}`). This lets `{{custom_brief_block}}` disappear cleanly when the advanced brief is empty. `undefined`/`null` still render as `{{key}}` (so missing keys are visibly broken — easier to debug).
 
 `src/lib/visualBrief.js` `buildVisualBriefBlock(brief, language)` composes the structured brief into Markdown bullets. Any field missing → bullet skipped. All fields missing AND notes empty → returns `''`, which makes the placeholder vanish.
+
+`src/lib/auditChecklist.js` `buildAuditChecklistBlock(value, language)` appends only checked review items. Keep language constraints out of the base template; if the user wants Taiwan Traditional Chinese, they can enable the `taiwan_traditional_chinese` checklist item.
 
 ### Section count vs slide count
 

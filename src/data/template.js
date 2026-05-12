@@ -1,57 +1,65 @@
 // NotebookLM 專屬 prompt 範本。{{...}} 由 lib/render.js 代換。
 
-export const NOTEBOOKLM_TEMPLATE = {
-  cn: `### NotebookLM 簡報生成
+export const NOTEBOOKLM_SUMMARY_TEMPLATE = {
+  cn: `### NotebookLM 對話摘要
 
-請基於我目前 Notebook 中的來源資料，產生一份結構完整的投影片簡報。
+請基於我目前 Notebook 中的來源資料，先整理一份可用於建立簡報的內容摘要。請不要產生投影片，只產生摘要。
 
-**主題與範圍：**
+**基本設定：**
 - 主題：{{topic}}
-- 讀者背景：{{slide_audience}}
-- 呈現重點：請從來源中萃取最關鍵的論點、證據與結論，避免大段複製原文
-
-**用途與呈現原則：**
 - 簡報用途：{{slide_style}}
-- 字體、留白與版面密度需服務所選用途；同一份簡報內請維持視覺一致
-- 若簡報用途與讀者背景需求衝突，請以讀者背景的理解需求、決策情境與專業背景優先
-{{custom_brief_block}}
-**結構與資訊密度：**
-- 開場：1 張封面 + 1 張摘要（TL;DR）
-- 主體：依來源內在邏輯切分為 {{section_count}} 個章節，每章節 2–4 張投影片
-- 結尾：1 張關鍵 takeaways + 1 張參考來源
-- 預設每張內容投影片至多 5 個重點項目；若所選用途需要完整作業資訊（例：決策會議、教育訓練），可使用表格、流程圖或完整段落，但仍維持版面清楚
-- 圖表優先：能用對照表、流程圖、時間軸表達的內容，請避免改回純文字
+{{audience_background_block}}
+- 預計主體章節數：{{section_count}}
 
-**引用與忠實度：**
-- 所有事實、數據、引述必須來自我的 Notebook 來源；不要外部補充或自行推論
-- 若來源彼此衝突，請在投影片上明確指出兩種說法
-- 每張投影片底部以小字標註本頁主要參照的來源檔名
-{{audit_checklist_block}}`,
+**摘要要求：**
+- 從來源中萃取最關鍵的論點、證據、數據與結論，避免大段複製原文
+- 依簡報用途整理內容取捨，讓後續可直接建立投影片大綱
+- 標示可用於摘要頁、主體章節、圖表或時間軸的重點素材
+- 若來源彼此衝突，請明確列出不同說法
+- 若來源不足，請標示「資料不足」，不要外部補充或自行推論
+{{audit_checklist_block}}
+**請用下列格式輸出：**
+1. 核心重點
+2. 可用於簡報的章節或頁面素材`,
 
-  en: `### NotebookLM Slide Deck
+  en: `### NotebookLM Chat Summary
 
-Generate a complete slide deck from the sources in my current notebook.
+Create a content summary from the sources in my current notebook for later slide-deck creation. Do not generate slides yet; generate the summary only.
 
-**Topic & Scope:**
+**Basic Settings:**
 - Topic: {{topic}}
-- Audience background: {{slide_audience}}
-- Surface only the most important arguments, evidence, and conclusions from the sources — do not copy long passages verbatim.
-
-**Purpose & Presentation Principles:**
 - Deck purpose: {{slide_style}}
-- Typography, whitespace, and layout density should serve the selected purpose; keep one deck visually unified.
-- If the deck purpose conflicts with the audience background, prioritize the audience’s comprehension needs, decision context, and domain background.
-{{custom_brief_block}}
-**Structure & Density:**
-- Opening: 1 cover slide + 1 TL;DR summary slide
-- Body: Section the deck by the internal logic of the sources into {{section_count}} sections, 2–4 slides per section
-- Closing: 1 key takeaways slide + 1 source reference slide
-- Up to 5 bullets per content slide by default; if the chosen purpose requires complete operational detail (e.g. Decision Meeting or Training), use tables, flowcharts, or full paragraphs while keeping the layout clear.
-- Prefer visuals: comparison tables, flowcharts, timelines beat plain text whenever possible.
+{{audience_background_block}}
+- Planned body sections: {{section_count}}
 
-**Citation & Faithfulness:**
-- Every fact, figure, and quote must come from the notebook sources — no external additions or inference.
-- If sources conflict, surface both positions explicitly on the slide.
-- At the bottom of every content slide, cite the source filename(s) the slide draws from in small text.
-{{audit_checklist_block}}`,
+**Summary Requirements:**
+- Extract the most important arguments, evidence, figures, and conclusions from the sources without copying long passages verbatim.
+- Organize content based on the selected deck purpose so it can directly support a slide outline later.
+- Identify material suitable for a summary slide, body sections, charts, or timelines.
+- If sources conflict, list the competing positions explicitly.
+- If evidence is insufficient, mark it as insufficient rather than adding external information or inference.
+{{audit_checklist_block}}
+**Output Format:**
+1. Core points
+2. Slide sections or page material`,
+}
+
+export const NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE = {
+  cn: `請依據 Notebook 來源建立簡報。
+
+**視覺與版面要求：**
+- 字體、留白與版面密度需一致，並服務簡報內容，不要只追求裝飾效果
+- 預設每張內容投影片至多 5 個重點項目；資訊複雜時優先使用表格、流程圖、對照圖或時間軸
+- 圖表優先：能用對照表、流程圖、時間軸表達的內容，請避免改回純文字
+- 每張投影片需有清楚標題，並讓重點結論容易掃讀
+{{custom_brief_block}}`,
+
+  en: `Create a slide deck based on the Notebook sources.
+
+**Visual & Layout Requirements:**
+- Keep typography, whitespace, and layout density consistent and in service of the content rather than decorative.
+- Use up to 5 key points per content slide by default; when information is complex, prefer tables, flowcharts, comparison diagrams, or timelines.
+- Prefer visuals: comparison tables, flowcharts, and timelines beat plain text whenever possible.
+- Every slide needs a clear title, and key takeaways should be easy to scan.
+{{custom_brief_block}}`,
 }

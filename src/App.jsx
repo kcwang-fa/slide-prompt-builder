@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { CheckSquare, Construction, FileText, Image as ImageIcon, Palette, Presentation, SlidersHorizontal, Sparkles } from 'lucide-react'
 
 import { BANKS, optionLabel } from './data/banks.js'
-import { NOTEBOOKLM_TEMPLATE } from './data/template.js'
+import { NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE, NOTEBOOKLM_SUMMARY_TEMPLATE } from './data/template.js'
 import { EMPTY_BRIEF } from './data/exampleBrief.js'
 import { AUDIT_CHECKLIST_ITEMS, DEFAULT_AUDIT_CHECKLIST } from './data/auditChecklist.js'
 import { render } from './lib/render.js'
@@ -22,8 +22,8 @@ import { OutputTargetPanel } from './components/OutputTargetPanel.jsx'
 import { SavedPromptsPanel } from './components/SavedPromptsPanel.jsx'
 
 const DEFAULT_SELECTIONS = {
-  slide_style: 'meeting',
-  slide_audience: 'team',
+  slide_style: 'teaching',
+  slide_audience: 'peer',
   slide_style_custom: '',
   slide_audience_custom: '',
 }
@@ -31,11 +31,21 @@ const DEFAULT_SELECTIONS = {
 const AUDIT_CHECKLIST_DEFAULTS_MIGRATION_KEY = 'spb_audit_checklist_defaults_v2_migrated'
 
 const LEGACY_STYLE_FALLBACK = {
-  professional: 'meeting',
-  academic: 'meeting',
+  meeting: 'teaching',
+  professional: 'teaching',
+  academic: 'teaching',
+  training: 'teaching',
   ted: 'teaching',
-  darktech: 'meeting',
+  darktech: 'teaching',
 }
+
+const LEGACY_AUDIENCE_FALLBACK = {
+  health_department: 'peer',
+  team: 'peer',
+  self: 'peer',
+}
+
+const AUDIENCE_REQUIRED_STYLE_IDS = new Set(['teaching', 'sketchnote', 'minimal'])
 
 const WORKSPACE_TABS = [
   { id: 'basic', icon: SlidersHorizontal, label: { cn: '基本設定', en: 'Basics' } },
@@ -66,6 +76,25 @@ function isLegacyAllCheckedAuditChecklist(value) {
 function selectionText(bankKey, optionId, customText, language) {
   if (optionId === 'custom' && customText?.trim()) return customText.trim()
   return optionLabel(bankKey, optionId, language)
+}
+
+function normalizeSlideStyle(styleId, language) {
+  return optionLabel('slide_style', styleId, language)
+    ? styleId
+    : LEGACY_STYLE_FALLBACK[styleId] || DEFAULT_SELECTIONS.slide_style
+}
+
+function normalizeSlideAudience(audienceId, language) {
+  return optionLabel('slide_audience', audienceId, language)
+    ? audienceId
+    : LEGACY_AUDIENCE_FALLBACK[audienceId] || DEFAULT_SELECTIONS.slide_audience
+}
+
+function buildAudienceBackgroundBlock(audienceText, language) {
+  if (!audienceText) return ''
+  return language === 'cn'
+    ? `- 讀者背景：${audienceText}`
+    : `- Audience background: ${audienceText}`
 }
 
 function ImageModePlaceholder({ language }) {
@@ -158,36 +187,38 @@ export default function App() {
   }, [activeTab, setActiveTab])
 
   useEffect(() => {
-    const nextStyle = optionLabel('slide_style', selections.slide_style, language)
-      ? selections.slide_style
-      : LEGACY_STYLE_FALLBACK[selections.slide_style] || DEFAULT_SELECTIONS.slide_style
-    const nextAudience = optionLabel('slide_audience', selections.slide_audience, language)
-      ? selections.slide_audience
-      : DEFAULT_SELECTIONS.slide_audience
+    const nextStyle = normalizeSlideStyle(selections.slide_style, language)
+    const nextAudience = normalizeSlideAudience(selections.slide_audience, language)
 
     if (nextStyle === selections.slide_style && nextAudience === selections.slide_audience) return
     setSelections({ ...selections, slide_style: nextStyle, slide_audience: nextAudience })
   }, [language, selections.slide_style, selections.slide_audience])
 
-  const generated = useMemo(() => {
-    const slideStyle = optionLabel('slide_style', selections.slide_style, language)
-      ? selections.slide_style
-      : LEGACY_STYLE_FALLBACK[selections.slide_style] || DEFAULT_SELECTIONS.slide_style
-    const slideAudience = optionLabel('slide_audience', selections.slide_audience, language)
-      ? selections.slide_audience
-      : DEFAULT_SELECTIONS.slide_audience
+  const slideStyle = normalizeSlideStyle(selections.slide_style, language)
+  const requiresAudience = AUDIENCE_REQUIRED_STYLE_IDS.has(slideStyle)
+
+  const summaryPrompt = useMemo(() => {
+    const slideAudience = normalizeSlideAudience(selections.slide_audience, language)
     const slideStyleText = selectionText('slide_style', slideStyle, selections.slide_style_custom, language)
-    const slideAudienceText = selectionText('slide_audience', slideAudience, selections.slide_audience_custom, language)
-    const tpl = NOTEBOOKLM_TEMPLATE[language] || NOTEBOOKLM_TEMPLATE.cn
+    const slideAudienceText = requiresAudience
+      ? selectionText('slide_audience', slideAudience, selections.slide_audience_custom, language)
+      : ''
+    const tpl = NOTEBOOKLM_SUMMARY_TEMPLATE[language] || NOTEBOOKLM_SUMMARY_TEMPLATE.cn
     return render(tpl, {
       topic: topic.trim() || (language === 'cn' ? '（請填寫主題）' : '(topic placeholder)'),
       slide_style: slideStyleText,
-      slide_audience: slideAudienceText,
+      audience_background_block: buildAudienceBackgroundBlock(slideAudienceText, language),
       section_count: String(sectionCount),
-      custom_brief_block: buildVisualBriefBlock(visualBrief, language),
       audit_checklist_block: buildAuditChecklistBlock(auditChecklist, language),
     })
-  }, [language, selections, topic, sectionCount, visualBrief, auditChecklist])
+  }, [language, selections, slideStyle, requiresAudience, topic, sectionCount, auditChecklist])
+
+  const stylePrompt = useMemo(() => {
+    const tpl = NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE[language] || NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE.cn
+    return render(tpl, {
+      custom_brief_block: buildVisualBriefBlock(visualBrief, language),
+    })
+  }, [language, visualBrief])
 
   const updateSelection = (key, value) => {
     setSelections({ ...selections, [key]: value })
@@ -200,15 +231,11 @@ export default function App() {
   const handleLoad = (item) => {
     if (item.topic !== undefined) setTopic(item.topic)
     if (item.selections) {
-      const nextStyle = optionLabel('slide_style', item.selections.slide_style, language)
-        ? item.selections.slide_style
-        : LEGACY_STYLE_FALLBACK[item.selections.slide_style] || DEFAULT_SELECTIONS.slide_style
+      const nextStyle = normalizeSlideStyle(item.selections.slide_style, language)
       setSelections({
         ...item.selections,
         slide_style: nextStyle,
-        slide_audience: optionLabel('slide_audience', item.selections.slide_audience, language)
-          ? item.selections.slide_audience
-          : DEFAULT_SELECTIONS.slide_audience,
+        slide_audience: normalizeSlideAudience(item.selections.slide_audience, language),
       })
     }
     if (item.sectionCount) setSectionCount(item.sectionCount)
@@ -277,7 +304,7 @@ export default function App() {
 
             {activeTab === 'basic' && (
               <div className="space-y-6" role="tabpanel">
-                <TopicInput value={topic} onChange={setTopic} language={language} />
+                <TopicInput value={topic} onChange={setTopic} language={language} slideStyle={slideStyle} />
 
                 <div className="space-y-5">
                   <VariableSelect
@@ -288,20 +315,24 @@ export default function App() {
                     onCustomChange={(v) => updateSelection('slide_style_custom', v)}
                     language={language}
                   />
-                  <VariableSelect
-                    bankKey="slide_audience"
-                    value={selections.slide_audience}
-                    onChange={(v) => updateSelection('slide_audience', v)}
-                    customValue={selections.slide_audience_custom || ''}
-                    onCustomChange={(v) => updateSelection('slide_audience_custom', v)}
-                    language={language}
-                  />
+                  {requiresAudience && (
+                    <VariableSelect
+                      bankKey="slide_audience"
+                      value={selections.slide_audience}
+                      onChange={(v) => updateSelection('slide_audience', v)}
+                      customValue={selections.slide_audience_custom || ''}
+                      onCustomChange={(v) => updateSelection('slide_audience_custom', v)}
+                      language={language}
+                    />
+                  )}
                 </div>
-                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
-                  {language === 'cn'
-                    ? '簡報用途決定內容結構、資訊密度與任務重點；讀者背景決定術語深度、解釋程度與決策情境。若兩者看似衝突，請以讀者背景的理解需求優先。'
-                    : 'Deck purpose controls structure, density, and task emphasis; audience background controls terminology depth, explanation level, and decision context. If they conflict, prioritize the audience’s comprehension needs.'}
-                </div>
+                {requiresAudience && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                    {language === 'cn'
+                      ? '簡報用途決定內容結構、資訊密度與任務重點；讀者背景決定術語深度、解釋程度與決策情境。若兩者看似衝突，請以讀者背景的理解需求優先。'
+                      : 'Deck purpose controls structure, density, and task emphasis; audience background controls terminology depth, explanation level, and decision context. If they conflict, prioritize the audience’s comprehension needs.'}
+                  </div>
+                )}
                 <SectionCountSlider
                   value={sectionCount}
                   onChange={setSectionCount}
@@ -316,7 +347,7 @@ export default function App() {
                   value={visualBrief}
                   onChange={setVisualBrief}
                   language={language}
-                  slideStyle={selections.slide_style}
+                  slideStyle={slideStyle}
                   forceOpen
                 />
               </div>
@@ -334,7 +365,11 @@ export default function App() {
 
             {activeTab === 'prompt' && (
               <div role="tabpanel">
-                <OutputTargetPanel notebookPrompt={generated} outputType={outputMode} language={language} />
+                <OutputTargetPanel
+                  notebookPrompts={{ summary: summaryPrompt, style: stylePrompt }}
+                  outputType={outputMode}
+                  language={language}
+                />
               </div>
             )}
 

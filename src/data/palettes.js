@@ -9,7 +9,7 @@ export const PALETTES = [
     primary: '#003366',
     accent: '#FF6B5B',
     description: { cn: '深海藍＋珊瑚橙，白底', en: 'Deep navy + coral on white' },
-    suitableFor: ['meeting', 'training', 'minimal'],
+    suitableFor: ['acip', 'outbreak', 'teaching', 'minimal'],
   },
   {
     id: 'corporate',
@@ -18,7 +18,7 @@ export const PALETTES = [
     primary: '#1F3A5F',
     accent: '#C19A6B',
     description: { cn: '海軍藍＋卡其金', en: 'Navy + warm khaki' },
-    suitableFor: ['meeting'],
+    suitableFor: ['outbreak', 'acip'],
   },
   {
     id: 'academic',
@@ -27,7 +27,7 @@ export const PALETTES = [
     primary: '#3B2F2F',
     accent: '#8B4513',
     description: { cn: '米白底＋深棕，引用感', en: 'Cream + dark brown' },
-    suitableFor: ['meeting', 'sketchnote'],
+    suitableFor: ['sketchnote', 'outbreak', 'acip'],
   },
   {
     id: 'teaching',
@@ -36,7 +36,7 @@ export const PALETTES = [
     primary: '#D2691E',
     accent: '#5B8A72',
     description: { cn: '暖橘＋森林綠', en: 'Warm orange + sage green' },
-    suitableFor: ['training', 'teaching', 'sketchnote'],
+    suitableFor: ['teaching', 'sketchnote'],
   },
   {
     id: 'ted',
@@ -45,7 +45,7 @@ export const PALETTES = [
     primary: '#000000',
     accent: '#E62B1E',
     description: { cn: '純黑＋TED 紅', en: 'Pure black + TED red' },
-    suitableFor: ['training', 'teaching', 'minimal'],
+    suitableFor: ['teaching', 'minimal'],
   },
   {
     id: 'darktech',
@@ -54,7 +54,7 @@ export const PALETTES = [
     primary: '#7C5CFF',
     accent: '#22D3EE',
     description: { cn: '黑底＋紫＋電光藍', en: 'Black + violet + neon cyan' },
-    suitableFor: ['meeting'],
+    suitableFor: [],
   },
   {
     id: 'sketchnote',
@@ -63,7 +63,7 @@ export const PALETTES = [
     primary: '#2C3E50',
     accent: '#E67E22',
     description: { cn: '米白＋深藍灰＋活力橘', en: 'Cream + slate + zest' },
-    suitableFor: ['sketchnote', 'training', 'teaching'],
+    suitableFor: ['sketchnote', 'teaching'],
   },
   {
     id: 'forest',
@@ -72,6 +72,6 @@ export const PALETTES = [
     primary: '#1F3D2A',
     accent: '#B8860B',
     description: { cn: '米底＋墨綠＋古銅金', en: 'Cream + forest + bronze' },
-    suitableFor: ['minimal', 'meeting'],
+    suitableFor: ['minimal'],
   },
 ]

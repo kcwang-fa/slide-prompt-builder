@@ -39,7 +39,7 @@ function ConstructionPanel({ language, toolLabel, compact }) {
   )
 }
 
-export function OutputTargetPanel({ notebookPrompt, outputType, language, compact = false }) {
+export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', outputType, language, compact = false }) {
   const [toolByType, setToolByType] = useState({
     presentation: 'notebooklm',
     image: 'nano_banana',
@@ -85,13 +85,22 @@ export function OutputTargetPanel({ notebookPrompt, outputType, language, compac
       </div>
 
       {activeTool.status === 'ready' ? (
-        <PromptOutput
-          prompt={notebookPrompt}
-          language={language}
-          compact={compact}
-          title={language === 'cn' ? 'NotebookLM Prompt' : 'NotebookLM Prompt'}
-          editable
-        />
+        <div className="space-y-3">
+          <PromptOutput
+            prompt={notebookPrompts.summary || notebookPrompt}
+            language={language}
+            compact={compact}
+            title={language === 'cn' ? '1. NotebookLM 對話摘要 Prompt' : '1. NotebookLM Chat Summary Prompt'}
+            editable
+          />
+          <PromptOutput
+            prompt={notebookPrompts.style || ''}
+            language={language}
+            compact={compact}
+            title={language === 'cn' ? '2. 自訂簡報風格說明' : '2. Custom Presentation Style Description'}
+            editable
+          />
+        </div>
       ) : (
         <ConstructionPanel
           language={language}

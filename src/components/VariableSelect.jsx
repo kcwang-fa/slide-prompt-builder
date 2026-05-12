@@ -1,34 +1,28 @@
 import { BANKS } from '../data/banks.js'
 import {
+  Activity,
   BookOpen,
-  Briefcase,
   Building2,
   CircleUserRound,
   ClipboardList,
   FileQuestion,
   FileText,
-  GraduationCap,
   Lightbulb,
   Microscope,
-  PencilLine,
   Presentation,
-  Stethoscope,
-  Target,
+  Syringe,
   UserCheck,
 } from 'lucide-react'
 
 const OPTION_ICONS = {
-  meeting: Briefcase,
-  training: GraduationCap,
+  acip: Syringe,
+  outbreak: Activity,
   teaching: Presentation,
   sketchnote: BookOpen,
   minimal: Lightbulb,
-  health_department: Stethoscope,
-  team: Target,
   peer: Microscope,
-  student: FileText,
   public: CircleUserRound,
-  self: PencilLine,
+  student: FileText,
   custom: FileQuestion,
 }
 
@@ -39,12 +33,12 @@ const BANK_ICONS = {
 
 const CUSTOM_PLACEHOLDERS = {
   slide_style: {
-    cn: '例如：教育訓練，需涵蓋臨床診斷、症狀、治療、通報定義與公衛措施，並加入案例演練',
-    en: 'Example: Training deck covering clinical diagnosis, symptoms, treatment, reporting definition, public-health actions, and case exercises',
+    cn: '例如：教學／分享，需涵蓋臨床診斷、症狀、治療、通報定義與公衛措施，並加入案例演練',
+    en: 'Example: Teaching and briefing deck covering clinical diagnosis, symptoms, treatment, reporting definition, public-health actions, and case exercises',
   },
   slide_audience: {
-    cn: '例如：衛生局所第一線同仁，具公衛實務背景，但不一定熟悉此疾病的臨床細節',
-    en: 'Example: Local health department frontline staff with public-health experience but limited clinical detail on this disease',
+    cn: '例如：地方公衛第一線人員，具實務經驗但不熟悉此主題的專業細節',
+    en: 'Example: Local public-health frontline staff with practical experience but limited subject-specific detail',
   },
 }
 

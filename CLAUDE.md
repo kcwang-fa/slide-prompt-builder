@@ -30,7 +30,7 @@ All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, d
 - `activeTab` — workspace tab id (`basic`, `visual`, `audit`, `prompt`).
 - `selections` — `{ slide_style, slide_audience, slide_style_custom, slide_audience_custom }`. The legacy key names remain for compatibility, but the UI labels are now **簡報用途** and **讀者背景**. `slide_audience` is only shown and rendered for audience-sensitive purposes (`teaching`, `sketchnote`, `minimal`). `slide_style_custom` and `slide_audience_custom` are used only when the corresponding option id is `'custom'`.
 - `topic` — free text. `TopicInput` receives the normalized `slideStyle` and changes its placeholder example to match the selected deck purpose; this is only a hint and never auto-fills the topic.
-- `sectionCount` — integer 3–10 (drives **body sections**, not total slide count; see UI section below)
+- `sectionCount` — integer 1–10 (drives **body sections**, not total slide count; see UI section below)
 - `visualBrief` — structured object: `{ background, primary, accent, headingFont, bodyFont, designTerms, notes }`. All fields optional. **This shape replaced an earlier flat string `customBrief`** — the loader in `handleLoad` migrates old saved prompts (`item.customBrief: string` → `visualBrief.notes`).
 - `auditChecklist` — object keyed by item id. Default checked items are only `no_external_inference` and `neutral_tone`; all other review items start unchecked. A one-time migration in `App.jsx` moves old "everything checked" LocalStorage state to the new default.
 

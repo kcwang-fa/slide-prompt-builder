@@ -16,7 +16,7 @@ export function SectionCountSlider({ value, onChange, language }) {
       </div>
       <input
         type="range"
-        min={3}
+        min={1}
         max={10}
         step={1}
         value={value}
@@ -24,7 +24,7 @@ export function SectionCountSlider({ value, onChange, language }) {
         className="w-full accent-orange-500"
       />
       <div className="flex justify-between text-xs text-zinc-400 mt-1">
-        <span>3</span>
+        <span>1</span>
         <span>10</span>
       </div>
       <div className="text-[11px] text-zinc-400 mt-1">

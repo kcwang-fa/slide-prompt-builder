@@ -1,6 +1,18 @@
 import { useState } from 'react'
 import { Bookmark, Check, Edit2, Trash2, X } from 'lucide-react'
 
+function localize(value, language) {
+  if (!value || typeof value !== 'object') return value || ''
+  return value[language] || value.cn || value.en || ''
+}
+
+function itemSubtitle(item, language) {
+  if (item.outputMode === 'image') {
+    return localize(item.imageTemplateName, language) || item.imageTemplateId || (language === 'cn' ? '圖片 Prompt' : 'Image prompt')
+  }
+  return item.topic || (language === 'cn' ? '（無主題）' : '(no topic)')
+}
+
 export function SavedPromptsPanel({ saved, onSave, onLoad, onDelete, onRename, language }) {
   const [name, setName] = useState('')
   const [editingId, setEditingId] = useState(null)
@@ -87,7 +99,7 @@ export function SavedPromptsPanel({ saved, onSave, onLoad, onDelete, onRename, l
                   >
                     <span className="block truncate">{item.name}</span>
                     <span className="block text-xs text-zinc-400 font-normal truncate">
-                      {item.topic || (language === 'cn' ? '（無主題）' : '(no topic)')}
+                      {itemSubtitle(item, language)}
                     </span>
                   </button>
                   <button

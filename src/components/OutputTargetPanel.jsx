@@ -8,8 +8,7 @@ const OUTPUT_TOOLS = {
     { id: 'notebooklm', label: { cn: 'NotebookLM', en: 'NotebookLM' }, status: 'ready' },
   ],
   image: [
-    { id: 'nano_banana', label: { cn: 'Nano Banana', en: 'Nano Banana' }, status: 'building' },
-    { id: 'chatgpt_image', label: { cn: 'ChatGPT Image', en: 'ChatGPT Image' }, status: 'building' },
+    { id: 'nano_banana', label: { cn: 'Nano Banana', en: 'Nano Banana' }, status: 'ready' },
   ],
 }
 
@@ -39,7 +38,7 @@ function ConstructionPanel({ language, toolLabel, compact }) {
   )
 }
 
-export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', outputType, language, compact = false }) {
+export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', imagePrompt = '', outputType, language, compact = false }) {
   const [toolByType, setToolByType] = useState({
     presentation: 'notebooklm',
     image: 'nano_banana',
@@ -89,36 +88,54 @@ export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', o
       {activeTool.status === 'ready' ? (
         <div className="space-y-3">
           {activeTool.id === 'notebooklm' && (
-            <NotebookWorkflowGuide language={language} />
+            <>
+              <NotebookWorkflowGuide language={language} />
+              <PromptOutput
+                prompt={notebookPrompts.summary || notebookPrompt}
+                language={language}
+                compact={compact}
+                title={language === 'cn' ? '1. NotebookLM 對話摘要 Prompt' : '1. NotebookLM Chat Summary Prompt'}
+                copyLabel={language === 'cn' ? '複製 NotebookLM 對話摘要 Prompt' : 'Copy NotebookLM Chat Summary Prompt'}
+                copyStateKey="notebooklm-summary"
+                helperText={
+                  language === 'cn'
+                    ? '貼到 NotebookLM 對話。NotebookLM 回答後，將回答「儲存成記事」。'
+                    : 'Paste into NotebookLM chat. After NotebookLM answers, save the response as a note.'
+                }
+                editable
+              />
+              <PromptOutput
+                prompt={notebookPrompts.style || ''}
+                language={language}
+                compact={compact}
+                title={language === 'cn' ? '2. 自訂簡報風格說明' : '2. Custom Presentation Style Description'}
+                copyLabel={language === 'cn' ? '複製自訂簡報風格說明' : 'Copy Custom Presentation Style Description'}
+                copyStateKey="notebooklm-style"
+                helperText={
+                  language === 'cn'
+                    ? '把記事轉成來源後，勾選該來源，到工作室頁籤開「自訂簡報」，貼到「說明要建立的簡報」。'
+                    : 'Turn the note into a source, select that source, open Studio > Custom presentation, then paste this into "Describe the presentation you want to create."'
+                }
+                editable
+              />
+            </>
           )}
-          <PromptOutput
-            prompt={notebookPrompts.summary || notebookPrompt}
-            language={language}
-            compact={compact}
-            title={language === 'cn' ? '1. NotebookLM 對話摘要 Prompt' : '1. NotebookLM Chat Summary Prompt'}
-            copyLabel={language === 'cn' ? '複製 NotebookLM 對話摘要 Prompt' : 'Copy NotebookLM Chat Summary Prompt'}
-            copyStateKey="notebooklm-summary"
-            helperText={
-              language === 'cn'
-                ? '貼到 NotebookLM 對話。NotebookLM 回答後，將回答「儲存成記事」。'
-                : 'Paste into NotebookLM chat. After NotebookLM answers, save the response as a note.'
-            }
-            editable
-          />
-          <PromptOutput
-            prompt={notebookPrompts.style || ''}
-            language={language}
-            compact={compact}
-            title={language === 'cn' ? '2. 自訂簡報風格說明' : '2. Custom Presentation Style Description'}
-            copyLabel={language === 'cn' ? '複製自訂簡報風格說明' : 'Copy Custom Presentation Style Description'}
-            copyStateKey="notebooklm-style"
-            helperText={
-              language === 'cn'
-                ? '把記事轉成來源後，勾選該來源，到工作室頁籤開「自訂簡報」，貼到「說明要建立的簡報」。'
-                : 'Turn the note into a source, select that source, open Studio > Custom presentation, then paste this into "Describe the presentation you want to create."'
-            }
-            editable
-          />
+          {activeTool.id === 'nano_banana' && (
+            <PromptOutput
+              prompt={imagePrompt}
+              language={language}
+              compact={compact}
+              title={language === 'cn' ? 'Nano Banana 圖片 Prompt' : 'Nano Banana Image Prompt'}
+              copyLabel={language === 'cn' ? '複製 Nano Banana 圖片 Prompt' : 'Copy Nano Banana Image Prompt'}
+              copyStateKey="nano-banana-image"
+              helperText={
+                language === 'cn'
+                  ? '貼到 Nano Banana 的圖片生成輸入框；若要參考人物或產品，請一併上傳參考圖。'
+                  : 'Paste into Nano Banana image generation. Upload reference images as needed for people or products.'
+              }
+              editable
+            />
+          )}
         </div>
       ) : (
         <ConstructionPanel

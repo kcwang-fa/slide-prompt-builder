@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react'
-import { CheckSquare, Construction, FileText, Image as ImageIcon, Palette, Presentation, SlidersHorizontal, Sparkles } from 'lucide-react'
+import { CheckSquare, FileText, Image as ImageIcon, Palette, Presentation, SlidersHorizontal, Sparkles } from 'lucide-react'
 
 import { BANKS, optionLabel } from './data/banks.js'
+import { IMAGE_TEMPLATES } from './data/imageTemplates.js'
 import {
   NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE,
   NOTEBOOKLM_SIMPLE_PRESENTATION_STYLE_TEMPLATE,
@@ -19,6 +20,7 @@ import {
   simpleVisualBriefToPreviewBrief,
 } from './lib/visualBrief.js'
 import { buildAuditChecklistBlock } from './lib/auditChecklist.js'
+import { renderImagePrompt } from './lib/imagePrompt.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
 import { useSavedPrompts } from './hooks/useSavedPrompts.js'
 
@@ -32,6 +34,7 @@ import { SlidePreview } from './components/SlidePreview.jsx'
 import { AuditChecklist } from './components/AuditChecklist.jsx'
 import { OutputTargetPanel } from './components/OutputTargetPanel.jsx'
 import { SavedPromptsPanel } from './components/SavedPromptsPanel.jsx'
+import { ImagePromptWorkspace } from './components/ImagePromptWorkspace.jsx'
 
 const DEFAULT_SELECTIONS = {
   slide_style: 'teaching',
@@ -94,7 +97,7 @@ const OUTPUT_MODES = [
     id: 'image',
     icon: ImageIcon,
     label: { cn: '畫圖', en: 'Image' },
-    description: { cn: 'Nano Banana / ChatGPT Image', en: 'Nano Banana / ChatGPT Image' },
+    description: { cn: 'Nano Banana', en: 'Nano Banana' },
   },
 ]
 
@@ -130,31 +133,6 @@ function buildAudienceBackgroundBlock(audienceText, language) {
   return language === 'cn'
     ? `- 讀者背景：${audienceText}`
     : `- Audience background: ${audienceText}`
-}
-
-function ImageModePlaceholder({ language }) {
-  return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-8 text-center shadow-sm">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
-        <Construction size={22} />
-      </div>
-      <h2 className="mt-4 text-base font-black text-zinc-800">
-        {language === 'cn' ? '畫圖 Prompt 建置中' : 'Image Prompt Under Construction'}
-      </h2>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-zinc-500">
-        {language === 'cn'
-          ? 'Nano Banana 與 ChatGPT Image 的 prompt 設定尚未開放。完成後會提供專用的圖像類型、比例、文字量與視覺限制設定。'
-          : 'Nano Banana and ChatGPT Image prompt settings are not available yet. Dedicated image type, aspect ratio, text, and visual constraint controls will be added later.'}
-      </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
-        {['Nano Banana', 'ChatGPT Image'].map((tool) => (
-          <span key={tool} className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-500">
-            {tool} · {language === 'cn' ? '建置中' : 'WIP'}
-          </span>
-        ))}
-      </div>
-    </section>
-  )
 }
 
 function OutputModeToggle({ outputMode, setOutputMode, language, compact = false }) {
@@ -231,6 +209,8 @@ export default function App() {
   const [simpleVisualBrief, setSimpleVisualBrief] = useLocalStorage('spb_simple_visual_brief_v1', DEFAULT_SIMPLE_VISUAL_BRIEF)
   const [visualBrief, setVisualBrief] = useLocalStorage('spb_visual_brief_v1', EMPTY_BRIEF)
   const [auditChecklist, setAuditChecklist] = useLocalStorage('spb_audit_checklist_v1', DEFAULT_AUDIT_CHECKLIST)
+  const [imageTemplateId, setImageTemplateId] = useLocalStorage('spb_image_template_id_v1', IMAGE_TEMPLATES[0]?.id || '')
+  const [imageSelections, setImageSelections] = useLocalStorage('spb_image_selections_v1', {})
   const { savedPrompts, savePrompt, deletePrompt, renamePrompt } = useSavedPrompts()
 
   useEffect(() => {
@@ -249,6 +229,11 @@ export default function App() {
     if (OUTPUT_MODES.some((mode) => mode.id === outputMode)) return
     setOutputMode('presentation')
   }, [outputMode, setOutputMode])
+
+  useEffect(() => {
+    if (IMAGE_TEMPLATES.some((template) => template.id === imageTemplateId)) return
+    setImageTemplateId(IMAGE_TEMPLATES[0]?.id || '')
+  }, [imageTemplateId, setImageTemplateId])
 
   useEffect(() => {
     if (VISUAL_MODES.some((mode) => mode.id === visualMode)) return
@@ -289,6 +274,7 @@ export default function App() {
   const requiresAudience = AUDIENCE_REQUIRED_STYLE_IDS.has(slideStyle)
   const activeVisualMode = visualMode === 'advanced' ? 'advanced' : 'simple'
   const normalizedSectionCount = clampSectionCount(sectionCount)
+  const activeImageTemplate = IMAGE_TEMPLATES.find((template) => template.id === imageTemplateId) || IMAGE_TEMPLATES[0]
 
   const summaryPrompt = useMemo(() => {
     const slideAudience = normalizeSlideAudience(selections.slide_audience, language)
@@ -326,8 +312,30 @@ export default function App() {
     [activeVisualMode, visualBrief, simpleVisualBrief]
   )
 
+  const imagePrompt = useMemo(
+    () => renderImagePrompt(activeImageTemplate, imageSelections, language),
+    [activeImageTemplate, imageSelections, language]
+  )
+
   const updateSelection = (key, value) => {
     setSelections({ ...selections, [key]: value })
+  }
+
+  const updateImageSelection = (key, value) => {
+    setImageSelections((prev) => {
+      const next = { ...(prev || {}) }
+      if (value === undefined) {
+        delete next[key]
+      } else {
+        next[key] = value
+      }
+      return next
+    })
+  }
+
+  const handleImageTemplateChange = (nextTemplateId) => {
+    setImageTemplateId(nextTemplateId)
+    setImageSelections({})
   }
 
   const handleSave = (name) => {
@@ -341,6 +349,9 @@ export default function App() {
       visualBrief,
       auditChecklist,
       outputMode,
+      imageTemplateId,
+      imageTemplateName: activeImageTemplate?.name,
+      imageSelections,
     })
   }
 
@@ -378,6 +389,14 @@ export default function App() {
       setVisualMode('simple')
     }
     setAuditChecklist(item.auditChecklist ? { ...DEFAULT_AUDIT_CHECKLIST, ...item.auditChecklist } : DEFAULT_AUDIT_CHECKLIST)
+    if (item.imageTemplateId && IMAGE_TEMPLATES.some((template) => template.id === item.imageTemplateId)) {
+      setImageTemplateId(item.imageTemplateId)
+    }
+    if (item.imageSelections) {
+      setImageSelections(item.imageSelections)
+    } else if (item.outputMode === 'image') {
+      setImageSelections({})
+    }
     if (OUTPUT_MODES.some((mode) => mode.id === item.outputMode)) setOutputMode(item.outputMode)
     setActiveTab('basic')
   }
@@ -401,7 +420,50 @@ export default function App() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {outputMode === 'image' ? (
-          <ImageModePlaceholder language={language} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
+            <div className="space-y-6">
+              <ImagePromptWorkspace
+                language={language}
+                templateId={activeImageTemplate?.id}
+                onTemplateChange={handleImageTemplateChange}
+                selections={imageSelections}
+                onSelectionChange={updateImageSelection}
+              />
+
+              <div className="space-y-6 lg:hidden">
+                <OutputTargetPanel
+                  imagePrompt={imagePrompt}
+                  outputType={outputMode}
+                  language={language}
+                />
+                <SavedPromptsPanel
+                  saved={savedPrompts}
+                  onSave={handleSave}
+                  onLoad={handleLoad}
+                  onDelete={deletePrompt}
+                  onRename={renamePrompt}
+                  language={language}
+                />
+              </div>
+            </div>
+
+            <aside className="hidden space-y-6 lg:sticky lg:top-20 lg:block">
+              <OutputTargetPanel
+                imagePrompt={imagePrompt}
+                outputType={outputMode}
+                language={language}
+                compact
+              />
+              <SavedPromptsPanel
+                saved={savedPrompts}
+                onSave={handleSave}
+                onLoad={handleLoad}
+                onDelete={deletePrompt}
+                onRename={renamePrompt}
+                language={language}
+              />
+            </aside>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6 lg:items-start">
             <div className="space-y-6">

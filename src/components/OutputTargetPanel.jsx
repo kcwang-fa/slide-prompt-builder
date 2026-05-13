@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Bot, Construction } from 'lucide-react'
+import { NotebookWorkflowGuide } from './NotebookWorkflowGuide.jsx'
 import { PromptOutput } from './PromptOutput.jsx'
 
 const OUTPUT_TOOLS = {
   presentation: [
     { id: 'notebooklm', label: { cn: 'NotebookLM', en: 'NotebookLM' }, status: 'ready' },
-    { id: 'gemma', label: { cn: 'Gemma', en: 'Gemma' }, status: 'building' },
   ],
   image: [
     { id: 'nano_banana', label: { cn: 'Nano Banana', en: 'Nano Banana' }, status: 'building' },
@@ -58,39 +58,51 @@ export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', o
 
   return (
     <section className="space-y-3">
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {tools.map((tool) => {
-          const isActive = activeTool.id === tool.id
+      {tools.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {tools.map((tool) => {
+            const isActive = activeTool.id === tool.id
 
-          return (
-            <button
-              key={tool.id}
-              type="button"
-              onClick={() => setActiveTool(tool.id)}
-              className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition ${
-                isActive
-                  ? 'border-orange-500 bg-orange-50 text-orange-700'
-                  : 'border-zinc-200 bg-white text-zinc-500 hover:border-orange-300 hover:bg-orange-50'
-              }`}
-            >
-              {tool.label[language] || tool.label.cn}
-              {tool.status === 'building' && (
-                <span className="ml-1 font-semibold text-zinc-400">
-                  {language === 'cn' ? '建置中' : 'WIP'}
-                </span>
-              )}
-            </button>
-          )
-        })}
-      </div>
+            return (
+              <button
+                key={tool.id}
+                type="button"
+                onClick={() => setActiveTool(tool.id)}
+                className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition ${
+                  isActive
+                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    : 'border-zinc-200 bg-white text-zinc-500 hover:border-orange-300 hover:bg-orange-50'
+                }`}
+              >
+                {tool.label[language] || tool.label.cn}
+                {tool.status === 'building' && (
+                  <span className="ml-1 font-semibold text-zinc-400">
+                    {language === 'cn' ? '建置中' : 'WIP'}
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {activeTool.status === 'ready' ? (
         <div className="space-y-3">
+          {activeTool.id === 'notebooklm' && (
+            <NotebookWorkflowGuide language={language} />
+          )}
           <PromptOutput
             prompt={notebookPrompts.summary || notebookPrompt}
             language={language}
             compact={compact}
             title={language === 'cn' ? '1. NotebookLM 對話摘要 Prompt' : '1. NotebookLM Chat Summary Prompt'}
+            copyLabel={language === 'cn' ? '複製 NotebookLM 對話摘要 Prompt' : 'Copy NotebookLM Chat Summary Prompt'}
+            copyStateKey="notebooklm-summary"
+            helperText={
+              language === 'cn'
+                ? '貼到 NotebookLM 對話。NotebookLM 回答後，將回答「儲存成記事」。'
+                : 'Paste into NotebookLM chat. After NotebookLM answers, save the response as a note.'
+            }
             editable
           />
           <PromptOutput
@@ -98,6 +110,13 @@ export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', o
             language={language}
             compact={compact}
             title={language === 'cn' ? '2. 自訂簡報風格說明' : '2. Custom Presentation Style Description'}
+            copyLabel={language === 'cn' ? '複製自訂簡報風格說明' : 'Copy Custom Presentation Style Description'}
+            copyStateKey="notebooklm-style"
+            helperText={
+              language === 'cn'
+                ? '把記事轉成來源後，勾選該來源，到工作室頁籤開「自訂簡報」，貼到「說明要建立的簡報」。'
+                : 'Turn the note into a source, select that source, open Studio > Custom presentation, then paste this into "Describe the presentation you want to create."'
+            }
             editable
           />
         </div>

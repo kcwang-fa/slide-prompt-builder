@@ -88,7 +88,7 @@ const OUTPUT_MODES = [
     id: 'presentation',
     icon: Presentation,
     label: { cn: '簡報', en: 'Deck' },
-    description: { cn: 'NotebookLM / Gemma', en: 'NotebookLM / Gemma' },
+    description: { cn: 'NotebookLM', en: 'NotebookLM' },
   },
   {
     id: 'image',
@@ -405,118 +405,139 @@ export default function App() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6 lg:items-start">
             <div className="space-y-6">
-            <div className="rounded-xl border border-zinc-200 bg-white p-1 shadow-sm">
-              <div className="grid grid-cols-2 gap-1 sm:grid-cols-4" role="tablist" aria-label={language === 'cn' ? '工作區分頁' : 'Workspace tabs'}>
-                {WORKSPACE_TABS.map((tab) => {
-                  const Icon = tab.icon
-                  const isActive = activeTab === tab.id
+              <div className="rounded-xl border border-zinc-200 bg-white p-1 shadow-sm">
+                <div className="grid grid-cols-2 gap-1 sm:grid-cols-4" role="tablist" aria-label={language === 'cn' ? '工作區分頁' : 'Workspace tabs'}>
+                  {WORKSPACE_TABS.map((tab) => {
+                    const Icon = tab.icon
+                    const isActive = activeTab === tab.id
 
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-2 py-2 text-sm font-bold transition ${
-                        isActive
-                          ? 'bg-orange-500 text-white shadow-sm'
-                          : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800'
-                      }`}
-                    >
-                      <Icon size={15} />
-                      <span className="truncate">{tab.label[language] || tab.label.cn}</span>
-                    </button>
-                  )
-                })}
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-2 py-2 text-sm font-bold transition ${
+                          isActive
+                            ? 'bg-orange-500 text-white shadow-sm'
+                            : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800'
+                        }`}
+                      >
+                        <Icon size={15} />
+                        <span className="truncate">{tab.label[language] || tab.label.cn}</span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
 
-            {activeTab === 'basic' && (
-              <div className="space-y-6" role="tabpanel">
-                <TopicInput value={topic} onChange={setTopic} language={language} slideStyle={slideStyle} />
+              {activeTab === 'basic' && (
+                <div className="space-y-6" role="tabpanel">
+                  <TopicInput value={topic} onChange={setTopic} language={language} slideStyle={slideStyle} />
 
-                <div className="space-y-5">
-                  <VariableSelect
-                    bankKey="slide_style"
-                    value={selections.slide_style}
-                    onChange={(v) => updateSelection('slide_style', v)}
-                    customValue={selections.slide_style_custom || ''}
-                    onCustomChange={(v) => updateSelection('slide_style_custom', v)}
+                  <div className="space-y-5">
+                    <VariableSelect
+                      bankKey="slide_style"
+                      value={selections.slide_style}
+                      onChange={(v) => updateSelection('slide_style', v)}
+                      customValue={selections.slide_style_custom || ''}
+                      onCustomChange={(v) => updateSelection('slide_style_custom', v)}
+                      language={language}
+                    />
+                    {requiresAudience && (
+                      <VariableSelect
+                        bankKey="slide_audience"
+                        value={selections.slide_audience}
+                        onChange={(v) => updateSelection('slide_audience', v)}
+                        customValue={selections.slide_audience_custom || ''}
+                        onCustomChange={(v) => updateSelection('slide_audience_custom', v)}
+                        language={language}
+                      />
+                    )}
+                  </div>
+                  <SectionCountSlider
+                    value={normalizedSectionCount}
+                    onChange={setSectionCount}
                     language={language}
                   />
-                  {requiresAudience && (
-                    <VariableSelect
-                      bankKey="slide_audience"
-                      value={selections.slide_audience}
-                      onChange={(v) => updateSelection('slide_audience', v)}
-                      customValue={selections.slide_audience_custom || ''}
-                      onCustomChange={(v) => updateSelection('slide_audience_custom', v)}
+                </div>
+              )}
+
+              {activeTab === 'visual' && (
+                <div className="space-y-4" role="tabpanel">
+                  <VisualModeToggle
+                    visualMode={activeVisualMode}
+                    setVisualMode={setVisualMode}
+                    language={language}
+                  />
+                  {activeVisualMode === 'simple' ? (
+                    <SimpleBriefInput
+                      value={simpleVisualBrief}
+                      onChange={setSimpleVisualBrief}
                       language={language}
+                      slideStyle={slideStyle}
+                    />
+                  ) : (
+                    <CustomBriefInput
+                      value={visualBrief}
+                      onChange={setVisualBrief}
+                      language={language}
+                      slideStyle={slideStyle}
+                      forceOpen
                     />
                   )}
                 </div>
-                <SectionCountSlider
-                  value={normalizedSectionCount}
-                  onChange={setSectionCount}
-                  language={language}
-                />
-              </div>
-            )}
+              )}
 
-            {activeTab === 'visual' && (
-              <div className="space-y-4" role="tabpanel">
-                <VisualModeToggle
-                  visualMode={activeVisualMode}
-                  setVisualMode={setVisualMode}
-                  language={language}
-                />
-                {activeVisualMode === 'simple' ? (
-                  <SimpleBriefInput
-                    value={simpleVisualBrief}
-                    onChange={setSimpleVisualBrief}
+              {activeTab === 'audit' && (
+                <div role="tabpanel">
+                  <AuditChecklist
+                    value={auditChecklist}
+                    onChange={setAuditChecklist}
                     language={language}
-                    slideStyle={slideStyle}
                   />
-                ) : (
-                  <CustomBriefInput
-                    value={visualBrief}
-                    onChange={setVisualBrief}
+                </div>
+              )}
+
+              {activeTab === 'prompt' && (
+                <div role="tabpanel">
+                  <OutputTargetPanel
+                    notebookPrompts={{ summary: summaryPrompt, style: stylePrompt }}
+                    outputType={outputMode}
                     language={language}
-                    slideStyle={slideStyle}
-                    forceOpen
+                  />
+                </div>
+              )}
+
+              <div className="lg:hidden space-y-6 pt-2">
+                {outputMode === 'presentation' && (
+                  <SlidePreview
+                    brief={previewBrief}
+                    topic={topic}
+                    sectionCount={normalizedSectionCount}
+                    language={language}
                   />
                 )}
-              </div>
-            )}
-
-            {activeTab === 'audit' && (
-              <div role="tabpanel">
-                <AuditChecklist
-                  value={auditChecklist}
-                  onChange={setAuditChecklist}
+                <SavedPromptsPanel
+                  saved={savedPrompts}
+                  onSave={handleSave}
+                  onLoad={handleLoad}
+                  onDelete={deletePrompt}
+                  onRename={renamePrompt}
                   language={language}
                 />
               </div>
-            )}
+            </div>
 
-            {activeTab === 'prompt' && (
-              <div role="tabpanel">
-                <OutputTargetPanel
-                  notebookPrompts={{ summary: summaryPrompt, style: stylePrompt }}
-                  outputType={outputMode}
-                  language={language}
-                />
-              </div>
-            )}
-
-            <div className="lg:hidden space-y-6 pt-2">
+            <aside className="hidden lg:block lg:sticky lg:top-20 space-y-6">
               {outputMode === 'presentation' && (
                 <SlidePreview
                   brief={previewBrief}
                   topic={topic}
                   sectionCount={normalizedSectionCount}
                   language={language}
+                  compact
                 />
               )}
               <SavedPromptsPanel
@@ -527,28 +548,7 @@ export default function App() {
                 onRename={renamePrompt}
                 language={language}
               />
-            </div>
-          </div>
-
-          <aside className="hidden lg:block lg:sticky lg:top-20 space-y-6">
-            {outputMode === 'presentation' && (
-              <SlidePreview
-                brief={previewBrief}
-                topic={topic}
-                sectionCount={normalizedSectionCount}
-                language={language}
-                compact
-              />
-            )}
-            <SavedPromptsPanel
-              saved={savedPrompts}
-              onSave={handleSave}
-              onLoad={handleLoad}
-              onDelete={deletePrompt}
-              onRename={renamePrompt}
-              language={language}
-            />
-          </aside>
+            </aside>
           </div>
         )}
 

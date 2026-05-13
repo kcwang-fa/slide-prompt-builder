@@ -12,7 +12,7 @@
 | **小而完整** | 約 3000 行 `src/` 程式碼、30 多個檔案；比 todo list 真實，但還沒有大到需要框架知識才能讀。 |
 | **真實但簡單** | 它真的可以用，不是 todo list。但沒有後端、沒有 router、沒有 TypeScript、沒有 Redux／Zustand 這類狀態管理函式庫。專心學 React 本身。 |
 | **完整生命週期** | 從本機開發、Tailwind 排版、LocalStorage 持久化，到 Docker 化、Railway 部署，全都涵蓋。 |
-| **看得到結果** | 你選個風格、按複製、貼到 NotebookLM——**一條完整的「使用者旅程」**——比學課堂上的抽象 React 例子好玩。 |
+| **看得到結果** | 你選個風格、按複製圖示、貼到 NotebookLM——**一條完整的「使用者旅程」**——比學課堂上的抽象 React 例子好玩。 |
 
 ---
 
@@ -343,19 +343,25 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 8. **`src/components/SimpleBriefInput.jsx`**
    簡化版視覺設定。看它怎麼根據 `slideStyle` 排序色板與字型，並把使用者選擇回傳給上層。
 
-9. **`src/components/PromptOutput.jsx`**
-   有 local state（`copied`）、有 async（`navigator.clipboard.writeText`）、有 setTimeout。比前面的元件複雜一階。
+9. **`src/components/NotebookWorkflowGuide.jsx`**
+   純展示元件。它把 NotebookLM 的外部操作流程放在 Prompt 分頁裡：上傳資料、取得摘要、儲存成記事、轉成來源並勾選、到工作室開自訂簡報、貼上風格說明。
 
-10. **`src/components/SavedPromptsPanel.jsx`**
+10. **`src/components/PromptOutput.jsx`**
+   有 local state、有 async（`navigator.clipboard.writeText`），也有 module-level `Map`。重點看它怎麼判斷「目前這份 prompt 是否已複製」：只有內容完全相同才顯示綠色打勾；內容改了就回到橘色複製圖示。
+
+11. **`src/components/OutputTargetPanel.jsx`**
+   Prompt 分頁的組合元件。現在簡報模式只有 NotebookLM，所以單一工具 selector 會被隱藏；它負責把流程導覽和兩段 `<PromptOutput />` 排在一起。
+
+12. **`src/components/SavedPromptsPanel.jsx`**
    最複雜的元件之一。有列表渲染、條件渲染（編輯模式 vs 顯示模式）、多個 callback。看懂它就 OK 了。
 
-11. **`src/components/CustomBriefInput.jsx`**
+13. **`src/components/CustomBriefInput.jsx`**
     最大的元件。看「狀態提升（lifting state up）」是怎麼做的——它自己沒有 `useState`，所有狀態都從 `App.jsx` 傳下來。它和 `SimpleBriefInput` 是同一個視覺設定目標的兩種 UI。
 
-12. **`src/App.jsx`**
+14. **`src/App.jsx`**
     所有東西的組合點。重點看三件事：state 集中管理、`useMemo` 生成兩段 prompt、`handleSave` / `handleLoad` 如何維持舊資料相容。
 
-13. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
+15. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
     跟 React 無關但跟「怎麼讓網站上線」有關。CS50 沒教的部分。
 
 ---
@@ -382,7 +388,7 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 
 ### 挑戰
 
-10. **補完第二個輸出目標**：目前輸出目標已有 NotebookLM 與 Gemma 的位置，但 Gemma 還是建置中。請設計 Gemma 專用模板、接上 `OutputTargetPanel`，並想清楚 saved prompt 是否需要記住不同平台的設定。**這題會逼你做架構決策**——是這個專案最值得的一題。
+10. **補完第二個輸出模式**：目前已有簡報與畫圖兩種輸出模式，但畫圖模式仍是建置中。請設計圖像 prompt 專用模板、接上 `OutputTargetPanel`，並想清楚 saved prompt 是否需要記住不同模式的設定。**這題會逼你做架構決策**——是這個專案最值得的一題。
 
 ---
 

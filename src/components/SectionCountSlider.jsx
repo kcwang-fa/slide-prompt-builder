@@ -1,5 +1,5 @@
 export function SectionCountSlider({ value, onChange, language }) {
-  // 投影片數估算：開場 1 封面 + 1 TL;DR、主體 value × 2–4、結尾 1 takeaways + 1 sources
+  // 投影片數估算：開場 1 封面 + 1 摘要、主體 value × 2–4、結尾 1 takeaways + 1 sources
   const minSlides = 4 + value * 2
   const maxSlides = 4 + value * 4
   return (
@@ -45,8 +45,8 @@ export function SectionCountSlider({ value, onChange, language }) {
       </div>
       <div className="mt-2 text-sm font-semibold leading-relaxed text-zinc-500">
         {language === 'cn'
-          ? '建議 2–4 章；5–6 章適合長篇或高密度報告，但可能影響產出品質。估算已包含封面、TL;DR、takeaways 與來源頁。'
-          : 'Recommended: 2–4 sections; 5–6 fits longer or denser reports but may reduce output quality. The estimate includes cover, TL;DR, takeaways, and sources.'}
+          ? '建議 2–4 章；5–6 章適合長篇或高密度報告，但可能影響產出品質。估算已包含封面、摘要、takeaways 與來源頁。'
+          : 'Recommended: 2–4 sections; 5–6 fits longer or denser reports but may reduce output quality. The estimate includes cover, summary, takeaways, and sources.'}
       </div>
     </section>
   )

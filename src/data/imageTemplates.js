@@ -1,10 +1,11 @@
 // Generated from PromptFill built-in image prompt data. Do not import PromptFill at runtime.
 
 export const IMAGE_TEMPLATE_TAGS = [
+  "病原體",
+  "心智圖",
   "人物",
   "攝影",
   "產品",
-  "病原體",
   "醫學",
   "建築",
   "圖表",
@@ -839,14 +840,244 @@ export const IMAGE_TEMPLATES = [
     ]
   },
   {
+    "id": "tpl_reading_notes_mindmap",
+    "recommended": true,
+    "name": {
+      "cn": "讀書筆記心智圖",
+      "en": "Reading Notes Mind Map"
+    },
+    "content": {
+      "cn": `### 讀書筆記心智圖
+
+請根據我提供的讀書筆記，生成一張清晰、可讀、適合複習的心智圖。
+
+**主題:** {{book_topic}}
+
+**讀書筆記內容:**
+{{reading_notes}}
+
+**心智圖整理要求:**
+1. 以上述主題作為中心主節點。
+2. 從筆記中歸納 {{mindmap_branch_count}}，每個主要分支代表一個核心概念、章節重點或重要論點。
+3. 每個主要分支下方再延伸 2 到 5 個子節點，用簡短關鍵字或短句呈現。
+4. 如果筆記中有因果關係、對比關係、步驟流程或分類架構，請用清楚的連線、箭頭或分組呈現。
+5. 保留重要專有名詞、關鍵概念、數字、方法、模型與結論。
+6. 不要逐字抄寫長段文字，請濃縮成適合心智圖閱讀的短句。
+7. 文字必須清楚可讀，避免過小、重疊、模糊或被裝飾遮住。
+8. 整體版面留白充足，節點層級分明，閱讀順序自然。
+
+**視覺風格:**
+- {{mindmap_visual_style}}
+- 白色或淡米色紙張背景。
+- 使用柔和但有區分度的多色分支。
+- 節點使用圓角矩形或手寫筆記框。
+- 線條清楚、連接自然。
+- 類似 Notion、Obsidian 或手帳讀書筆記的高品質學習視覺。
+- 不要使用複雜插畫，不要使用過度裝飾背景。
+
+**輸出規格:**
+- {{ratio}}
+- 高解析度。
+- 所有文字使用繁體中文。
+- 生成一張完整的心智圖圖片。`,
+      "en": `### Reading Notes Mind Map
+
+Create a clear, readable mind map image for review based on the reading notes below.
+
+**Topic:** {{book_topic}}
+
+**Reading Notes:**
+{{reading_notes}}
+
+**Mind Map Requirements:**
+1. Use the topic above as the central node.
+2. Summarize the notes into {{mindmap_branch_count}}, where each main branch represents a core concept, chapter point, or important argument.
+3. Add 2 to 5 child nodes under each main branch using short keywords or concise phrases.
+4. If the notes include cause-effect, comparison, process steps, or classification, show them with clear connections, arrows, or grouped regions.
+5. Preserve important terminology, concepts, numbers, methods, models, and conclusions.
+6. Do not copy long paragraphs verbatim; compress them into mind-map-friendly short phrases.
+7. All text must be sharp and readable. Avoid tiny text, overlap, blur, or decoration covering text.
+8. Keep generous whitespace, clear hierarchy, and natural reading order.
+
+**Visual Style:**
+- {{mindmap_visual_style}}
+- White or light warm paper background.
+- Soft but clearly differentiated branch colors.
+- Rounded rectangle nodes or clean study-note boxes.
+- Clear lines with natural connections.
+- High-quality learning visual similar to Notion, Obsidian, or organized study notes.
+- No complex illustration and no overly decorative background.
+
+**Output Specs:**
+- {{ratio}}
+- High resolution.
+- Use English text.
+- Generate one complete mind map image.`
+    },
+    "contentByTarget": {
+      "nano_banana": null,
+      "gpt_image": {
+        "cn": `### 讀書筆記心智圖
+
+請先閱讀並理解我提供的讀書筆記，整理出資訊架構，再生成一張清晰、可讀、適合複習的心智圖圖片。
+
+**主題:** {{book_topic}}
+
+**讀書筆記內容:**
+{{reading_notes}}
+
+**資訊整理要求:**
+1. 先歸納筆記的核心論點、章節重點、關鍵概念與結論。
+2. 以上述主題作為中心主節點。
+3. 從筆記中整理出 {{mindmap_branch_count}}，每個主要分支用短句標示。
+4. 每個主要分支延伸 2 到 5 個子節點，子節點使用簡短關鍵字或短句。
+5. 如果筆記中有因果、對比、流程、分類或時間順序，請用箭頭、分組或清楚連線表達。
+6. 保留重要專有名詞、模型名稱、數字、方法與結論；不要逐字抄寫長段文字。
+
+**視覺與文字要求:**
+- {{mindmap_visual_style}}
+- 白色或淡米色紙張背景，整體乾淨、有留白。
+- 使用柔和但有區分度的多色分支。
+- 節點可用圓角矩形、筆記框或清楚的標籤區塊。
+- 所有文字必須清楚可讀；避免小字、密集文字、重疊、模糊、亂碼或被裝飾遮住。
+- 圖形層級要明確，閱讀順序自然。
+- 不要使用複雜插畫、過度裝飾背景、品牌 logo 或浮水印。
+
+**輸出規格:**
+- {{ratio}}
+- 高解析度。
+- 所有文字使用繁體中文。
+- 生成一張完整的心智圖圖片。`,
+        "en": `### Reading Notes Mind Map
+
+First read and understand the reading notes below, organize the information structure, then create a clear, readable mind map image for review.
+
+**Topic:** {{book_topic}}
+
+**Reading Notes:**
+{{reading_notes}}
+
+**Information Organization Requirements:**
+1. First identify the core arguments, chapter points, key concepts, and conclusions.
+2. Use the topic above as the central node.
+3. Organize the notes into {{mindmap_branch_count}}, with each main branch labeled using a short phrase.
+4. Add 2 to 5 child nodes under each main branch using concise keywords or short phrases.
+5. If the notes include cause-effect, comparison, process, classification, or chronology, show that with arrows, grouped regions, or clear connections.
+6. Preserve important terminology, model names, numbers, methods, and conclusions; do not copy long paragraphs verbatim.
+
+**Visual and Text Requirements:**
+- {{mindmap_visual_style}}
+- White or light warm paper background, clean overall layout, and generous whitespace.
+- Soft but clearly differentiated branch colors.
+- Nodes may use rounded rectangles, note boxes, or clear label blocks.
+- All text must be sharp and readable; avoid tiny text, dense text, overlap, blur, gibberish, or decoration covering text.
+- The hierarchy must be clear and the reading order should feel natural.
+- No complex illustration, overly decorative background, brand logo, or watermark.
+
+**Output Specs:**
+- {{ratio}}
+- High resolution.
+- Use English text.
+- Generate one complete mind map image.`
+      }
+    },
+    "imageUrl": "/previews/reading-notes-mindmap.svg",
+    "author": "官方",
+    "selections": {
+      "mindmap_branch_count-0": {
+        "cn": "5 到 8 個主要分支",
+        "en": "5 to 8 main branches"
+      },
+      "mindmap_visual_style-0": {
+        "cn": "乾淨的知識整理風格",
+        "en": "clean knowledge-organization style"
+      },
+      "ratio-0": {
+        "cn": "16:9橫式構圖",
+        "en": "16:9 Horizontal"
+      }
+    },
+    "tags": [
+      "心智圖"
+    ],
+    "language": [
+      "cn",
+      "en"
+    ]
+  },
+  {
     "id": "tpl_pathogen_cartoon_poster",
+    "recommended": true,
     "name": {
       "cn": "病原體卡通海報",
       "en": "Pathogen Cartoon Poster"
     },
     "content": {
-      "cn": "### 病原體卡通海報\n請生成一張可直接用於 Nano Banana 的病原體卡通海報主視覺。畫面應具備科普教育感、角色吸引力與高完成度海報構圖。\n\n**疾病、代表病原體與傳染途徑:** {{pathogen_disease}}\n\n**卡通風格:** {{pathogen_cartoon_style}}\n\n**海報構圖:** {{pathogen_poster_composition}}\n\n**角色個性:** {{pathogen_personality}}\n\n**姿勢與表情:** {{pathogen_pose}}\n\n**配色:** {{pathogen_palette}}\n\n**背景:** {{pathogen_background}}\n\n**完成質感:** {{pathogen_finish}}\n\n**畫幅:** {{ratio}}\n\n**科學與安全要求:** 保留代表性形態特徵與傳染途徑視覺符號，但以可愛、非恐怖、非血腥的方式表現；不要呈現病患、傷口、血液、器官病變、臨床診斷、治療建議或實驗操作步驟；如果疾病可能由多種病原造成，請畫成代表性病原體群像並避免暗示只有單一病原或單一傳染途徑。\n\n**避免內容:** {{pathogen_negative_prompt}}",
-      "en": "### Pathogen Cartoon Poster\nCreate a high-quality cartoon pathogen poster visual for Nano Banana image generation. The result should feel educational, character-driven, and polished like a finished poster.\n\n**Disease, Representative Pathogen & Transmission Route:** {{pathogen_disease}}\n\n**Cartoon Style:** {{pathogen_cartoon_style}}\n\n**Poster Composition:** {{pathogen_poster_composition}}\n\n**Character Personality:** {{pathogen_personality}}\n\n**Pose & Expression:** {{pathogen_pose}}\n\n**Color Palette:** {{pathogen_palette}}\n\n**Background:** {{pathogen_background}}\n\n**Finish:** {{pathogen_finish}}\n\n**Aspect Ratio:** {{ratio}}\n\n**Science & Safety Requirements:** Preserve representative morphology and transmission-route symbols, but present them in a cute, non-horror, non-gory way. Do not show patients, wounds, blood, diseased organs, clinical diagnosis, treatment claims, or lab procedure steps. If the disease can involve multiple pathogens, depict a representative pathogen group and avoid implying it has only one cause or one transmission route.\n\n**Negative Prompt:** {{pathogen_negative_prompt}}"
+      "cn": "### 病原體卡通海報\n請生成一張病原體卡通海報主視覺。畫面應具備科普教育感、角色吸引力與高完成度海報構圖。\n\n**疾病、代表病原體與傳染途徑:** {{pathogen_disease}}\n\n**卡通風格:** {{pathogen_cartoon_style}}\n\n**海報構圖:** {{pathogen_poster_composition}}\n\n**角色個性:** {{pathogen_personality}}\n\n**姿勢與表情:** {{pathogen_pose}}\n\n**配色:** {{pathogen_palette}}\n\n**背景:** {{pathogen_background}}\n\n**完成質感:** {{pathogen_finish}}\n\n**畫幅:** {{ratio}}\n\n**科學與安全要求:** 保留代表性形態特徵與傳染途徑視覺符號，但以可愛、非恐怖、非血腥的方式表現；不要呈現病患、傷口、血液、器官病變、臨床診斷、治療建議或實驗操作步驟；如果疾病可能由多種病原造成，請畫成代表性病原體群像並避免暗示只有單一病原或單一傳染途徑。\n\n**避免內容:** {{pathogen_negative_prompt}}",
+      "en": "### Pathogen Cartoon Poster\nCreate a high-quality cartoon pathogen poster visual. The result should feel educational, character-driven, and polished like a finished poster.\n\n**Disease, Representative Pathogen & Transmission Route:** {{pathogen_disease}}\n\n**Cartoon Style:** {{pathogen_cartoon_style}}\n\n**Poster Composition:** {{pathogen_poster_composition}}\n\n**Character Personality:** {{pathogen_personality}}\n\n**Pose & Expression:** {{pathogen_pose}}\n\n**Color Palette:** {{pathogen_palette}}\n\n**Background:** {{pathogen_background}}\n\n**Finish:** {{pathogen_finish}}\n\n**Aspect Ratio:** {{ratio}}\n\n**Science & Safety Requirements:** Preserve representative morphology and transmission-route symbols, but present them in a cute, non-horror, non-gory way. Do not show patients, wounds, blood, diseased organs, clinical diagnosis, treatment claims, or lab procedure steps. If the disease can involve multiple pathogens, depict a representative pathogen group and avoid implying it has only one cause or one transmission route.\n\n**Negative Prompt:** {{pathogen_negative_prompt}}"
+    },
+    "contentByTarget": {
+      "nano_banana": null,
+      "gpt_image": {
+        "cn": `### 病原體卡通海報
+請先理解下列疾病、代表病原體外觀與傳染途徑，再生成一張乾淨、可愛、適合科普教育使用的病原體卡通海報。
+
+**疾病、代表病原體與傳染途徑:** {{pathogen_disease}}
+
+**卡通風格:** {{pathogen_cartoon_style}}
+
+**海報構圖:** {{pathogen_poster_composition}}
+
+**角色個性:** {{pathogen_personality}}
+
+**姿勢與表情:** {{pathogen_pose}}
+
+**配色:** {{pathogen_palette}}
+
+**背景:** {{pathogen_background}}
+
+**完成質感:** {{pathogen_finish}}
+
+**畫幅:** {{ratio}}
+
+**生成要求:**
+- 先把病原體整理成安全、友善、容易辨識的卡通角色，再生成完整海報。
+- 保留代表性形態特徵與傳染途徑視覺符號，但不要追求恐怖或寫實感染效果。
+- 可加入少量清楚的大標題或簡短標籤；避免小字、密集文字、亂碼、假品牌或浮水印。
+- 如果疾病可能由多種病原造成，請畫成代表性病原體群像，不要暗示只有單一病原或單一傳染途徑。
+- 不要呈現病患、傷口、血液、器官病變、臨床診斷、治療建議或實驗操作步驟。
+
+**避免內容:** {{pathogen_negative_prompt}}`,
+        "en": `### Pathogen Cartoon Poster
+First understand the disease, representative pathogen appearance, and transmission route below, then create a clean, cute educational cartoon pathogen poster.
+
+**Disease, Representative Pathogen & Transmission Route:** {{pathogen_disease}}
+
+**Cartoon Style:** {{pathogen_cartoon_style}}
+
+**Poster Composition:** {{pathogen_poster_composition}}
+
+**Character Personality:** {{pathogen_personality}}
+
+**Pose & Expression:** {{pathogen_pose}}
+
+**Color Palette:** {{pathogen_palette}}
+
+**Background:** {{pathogen_background}}
+
+**Finish:** {{pathogen_finish}}
+
+**Aspect Ratio:** {{ratio}}
+
+**Image Generation Requirements:**
+- Turn the pathogen into a safe, friendly, recognizable cartoon character before generating the final poster.
+- Preserve representative morphology and transmission-route symbols, but do not make it horror-like or realistically infectious.
+- You may add a small amount of clear headline text or short labels; avoid tiny text, dense text, gibberish, fake brands, or watermarks.
+- If the disease can involve multiple pathogens, depict a representative pathogen group and avoid implying a single pathogen or a single transmission route.
+- Do not show patients, wounds, blood, diseased organs, clinical diagnosis, treatment advice, or lab procedure steps.
+
+**Negative Prompt:** {{pathogen_negative_prompt}}`
+      }
     },
     "imageUrl": "/previews/pathogen-cartoon-poster.png",
     "author": "官方",

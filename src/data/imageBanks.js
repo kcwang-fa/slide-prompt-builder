@@ -1434,6 +1434,64 @@ export const IMAGE_BANKS = {
       }
     ]
   },
+  "book_topic": {
+    "label": {
+      "cn": "書名或章節主題",
+      "en": "Book or Chapter Topic"
+    },
+    "category": "other",
+    "options": []
+  },
+  "reading_notes": {
+    "label": {
+      "cn": "讀書筆記內容",
+      "en": "Reading Notes"
+    },
+    "category": "other",
+    "options": []
+  },
+  "mindmap_branch_count": {
+    "label": {
+      "cn": "主要分支數量",
+      "en": "Main Branch Count"
+    },
+    "category": "visual",
+    "options": [
+      {
+        "cn": "5 到 8 個主要分支",
+        "en": "5 to 8 main branches"
+      },
+      {
+        "cn": "3 到 5 個精簡分支",
+        "en": "3 to 5 concise branches"
+      },
+      {
+        "cn": "8 到 10 個詳細分支",
+        "en": "8 to 10 detailed branches"
+      }
+    ]
+  },
+  "mindmap_visual_style": {
+    "label": {
+      "cn": "心智圖風格",
+      "en": "Mind Map Style"
+    },
+    "category": "visual",
+    "options": [
+      {
+        "cn": "乾淨的知識整理風格",
+        "en": "clean knowledge-organization style"
+      },
+      {
+        "cn": "手寫感讀書筆記風格，像整理在 iPad 筆記軟體中的乾淨頁面",
+        "en": "handwritten study-note style, like a clean iPad notes page"
+      },
+      {
+        "cn": "專業簡報型心智圖，扁平化設計，適合課堂報告或讀書會分享",
+        "en": "professional presentation mind map with flat design for class reports or book clubs"
+      }
+    ]
+  },
   "ratio": {
     "label": {
       "cn": "畫幅比例",
@@ -2149,6 +2207,14 @@ export const IMAGE_DEFAULTS = {
   "rain_shape": {
     "cn": "芭蕾舞者",
     "en": "Ballerina"
+  },
+  "mindmap_branch_count": {
+    "cn": "5 到 8 個主要分支",
+    "en": "5 to 8 main branches"
+  },
+  "mindmap_visual_style": {
+    "cn": "乾淨的知識整理風格",
+    "en": "clean knowledge-organization style"
   },
   "ratio": {
     "cn": "3:4直式構圖",

@@ -1,0 +1,37 @@
+<svg width="960" height="640" viewBox="0 0 960 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="640" rx="40" fill="#FAFAF7"/>
+  <rect x="38" y="38" width="884" height="564" rx="28" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+  <path d="M480 320 C378 262 304 232 216 190" stroke="#60A5FA" stroke-width="8" stroke-linecap="round"/>
+  <path d="M480 320 C366 316 270 318 156 322" stroke="#34D399" stroke-width="8" stroke-linecap="round"/>
+  <path d="M480 320 C382 386 298 428 204 482" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+  <path d="M480 320 C584 252 668 218 774 164" stroke="#F472B6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M480 320 C610 320 704 324 824 334" stroke="#A78BFA" stroke-width="8" stroke-linecap="round"/>
+  <path d="M480 320 C582 390 668 434 772 492" stroke="#FB923C" stroke-width="8" stroke-linecap="round"/>
+  <rect x="358" y="266" width="244" height="108" rx="28" fill="#111827"/>
+  <text x="480" y="310" text-anchor="middle" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">Reading Notes</text>
+  <text x="480" y="344" text-anchor="middle" fill="#D1D5DB" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600">Mind Map</text>
+  <g font-family="Inter, Arial, sans-serif" font-weight="700" font-size="22">
+    <rect x="88" y="132" width="228" height="88" rx="18" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+    <text x="202" y="168" text-anchor="middle" fill="#2563EB">Key Concept</text>
+    <text x="202" y="196" text-anchor="middle" fill="#60A5FA" font-size="16">core idea</text>
+    <rect x="74" y="278" width="220" height="84" rx="18" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="2"/>
+    <text x="184" y="314" text-anchor="middle" fill="#059669">Examples</text>
+    <text x="184" y="342" text-anchor="middle" fill="#34D399" font-size="16">evidence</text>
+    <rect x="92" y="438" width="224" height="88" rx="18" fill="#FFFBEB" stroke="#FDE68A" stroke-width="2"/>
+    <text x="204" y="474" text-anchor="middle" fill="#D97706">Takeaways</text>
+    <text x="204" y="502" text-anchor="middle" fill="#F59E0B" font-size="16">review notes</text>
+    <rect x="650" y="116" width="224" height="88" rx="18" fill="#FDF2F8" stroke="#FBCFE8" stroke-width="2"/>
+    <text x="762" y="152" text-anchor="middle" fill="#DB2777">Framework</text>
+    <text x="762" y="180" text-anchor="middle" fill="#F472B6" font-size="16">structure</text>
+    <rect x="682" y="292" width="210" height="84" rx="18" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="2"/>
+    <text x="787" y="328" text-anchor="middle" fill="#7C3AED">Process</text>
+    <text x="787" y="356" text-anchor="middle" fill="#A78BFA" font-size="16">steps</text>
+    <rect x="650" y="450" width="224" height="88" rx="18" fill="#FFF7ED" stroke="#FED7AA" stroke-width="2"/>
+    <text x="762" y="486" text-anchor="middle" fill="#EA580C">Conclusion</text>
+    <text x="762" y="514" text-anchor="middle" fill="#FB923C" font-size="16">summary</text>
+  </g>
+  <circle cx="344" cy="122" r="8" fill="#93C5FD"/>
+  <circle cx="612" cy="532" r="8" fill="#FDBA74"/>
+  <circle cx="128" cy="404" r="6" fill="#6EE7B7"/>
+  <circle cx="838" cy="244" r="6" fill="#F9A8D4"/>
+</svg>

@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A single-page prompt workspace with two output modes:
 
 - **Presentation**: composes two structured prompts for **NotebookLM** slide-deck generation. The first prompt is pasted into NotebookLM chat to create a source-grounded summary from the basic settings and review checklist. After NotebookLM answers, the user saves that answer as a note, converts the note into a source, selects that source, opens Studio → Custom presentation, and pastes the second prompt into the "describe the presentation to create" field.
-- **Image**: composes **Nano Banana** image-generation prompts from converted PromptFill image templates.
+- **Image**: composes image-generation prompts from converted PromptFill image templates. Some templates can switch target-specific prompt text (currently Nano Banana / GPT Image) while sharing the same user-facing fields.
 
 Everything is client-side — no backend, no router, no AI calls. Vite + React 18 + Tailwind.
 
@@ -22,7 +22,7 @@ npm run build     # → dist/
 npm run preview   # Serve dist/ for local sanity check
 ```
 
-There is no lint config and no test suite. The validation gate is `npm run build`, then open it in the browser, click around, copy a prompt, and paste into the target tool (NotebookLM for presentation mode, Nano Banana for image mode).
+There is no lint config and no test suite. The validation gate is `npm run build`, then open it in the browser, click around, copy a prompt, and paste into the target tool (NotebookLM for presentation mode, the selected image target for image mode).
 
 ## Architecture
 
@@ -41,9 +41,10 @@ All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, d
 - `visualBrief` — advanced structured object: `{ background, primary, accent, headingFont, bodyFont, designTerms, notes }`. All fields optional. **This shape replaced an earlier flat string `customBrief`** — the loader in `handleLoad` migrates old saved prompts (`item.customBrief: string` → `visualBrief.notes`).
 - `auditChecklist` — object keyed by item id. Default checked items are only `no_external_inference` and `neutral_tone`; all other review items start unchecked. A one-time migration in `App.jsx` moves old "everything checked" LocalStorage state to the new default.
 - `imageTemplateId` — selected PromptFill-derived image template id, persisted at `spb_image_template_id_v1`.
+- `imagePromptTarget` — selected image prompt target, persisted at `spb_image_prompt_target_v1`. Current ids are `nano_banana` and `gpt_image`; templates without target-specific copy normalize back to `nano_banana`.
 - `imageSelections` — image-template variable overrides keyed by unique variable occurrence (`grid_pose-0`, `lens_param-8`, etc.), persisted at `spb_image_selections_v1`.
 
-Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. New entries use `schemaVersion: 3` and store `{ id, schemaVersion, name, createdAt, topic, selections, sectionCount, visualMode, simpleVisualBrief, visualBrief, auditChecklist, outputMode, imageTemplateId, imageTemplateName, imageSelections }`. Managed by `hooks/useSavedPrompts.js`.
+Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. New entries use `schemaVersion: 3` and store `{ id, schemaVersion, name, createdAt, topic, selections, sectionCount, visualMode, simpleVisualBrief, visualBrief, auditChecklist, outputMode, imageTemplateId, imageTemplateName, imagePromptTarget, imageSelections }`. Managed by `hooks/useSavedPrompts.js`.
 
 ### Presentation Control Surfaces
 
@@ -65,12 +66,15 @@ The chat summary prompt asks NotebookLM to output only two sections: `核心重�
 Image mode replaces the old placeholder with a PromptFill-derived template workflow:
 
 - Data lives in `src/data/imageTemplates.js` and `src/data/imageBanks.js`. These files are copied/converted data, not runtime imports from PromptFill.
-- `src/components/ImagePromptWorkspace.jsx` owns the image UI: template search, tag filtering, template preview image, and variable fields.
-- `src/lib/imagePrompt.js` owns image prompt rendering, localization, supported-language fallback, repeated-variable occurrence handling, and Markdown cleanup.
-- `src/components/OutputTargetPanel.jsx` exposes only **Nano Banana** for `outputType === 'image'`. ChatGPT Image is intentionally not wired yet.
+- `src/components/ImagePromptWorkspace.jsx` owns the image UI: template search, tag filtering, target switching when a template supports multiple targets, template preview image, and variable fields.
+- `src/lib/imagePrompt.js` owns image prompt rendering, target-specific template text selection, localization, supported-language fallback, repeated-variable occurrence handling, and Markdown cleanup.
+- `src/components/OutputTargetPanel.jsx` uses the active image prompt target label for image output copy. The generated prompt text itself should not include model/tool names unless a future template explicitly needs that wording.
+- Templates can set `recommended: true` to show the orange star recommendation badge in the template list and active-template header. Tags containing recommended templates also show a star in the filter row. Currently the pathogen poster and reading-notes mind map templates are recommended, and `病原體` / `心智圖` are intentionally first in `IMAGE_TEMPLATE_TAGS`.
+- Templates may define `contentByTarget` with keys such as `nano_banana` and `gpt_image`. A `null` target body means "fall back to the default `content` body". Keep shared variables aligned across target bodies unless the UI is intentionally different per target.
 - Imported PromptFill templates are curated: `tpl_default` and `tpl_fashion` are excluded because their template bodies contain explicit private/adult-oriented content. Keep that exclusion unless the user explicitly changes the content policy.
 - `fruit_1` is intentionally represented as its own image bank key, aliased from PromptFill's `fruit` data, because the Japanese product poster template uses `{{fruit_1}}`.
-- `tpl_pathogen_cartoon_poster` is a local custom image template for cute educational pathogen posters. It is intentionally broad enough for American cartoon, Japanese mascot/anime, flat vector, sticker, children's book, and science-magazine styles. Keep it non-clinical and non-gory.
+- `tpl_pathogen_cartoon_poster` is a local custom image template for cute educational pathogen posters. It is intentionally broad enough for American cartoon, Japanese mascot/anime, flat vector, sticker, children's book, and science-magazine styles. It has target-specific prompt wording for Nano Banana and GPT Image; keep both non-clinical and non-gory, and avoid putting tool names in the rendered prompt.
+- `tpl_reading_notes_mindmap` is a local custom image template for converting reading notes into a mind map. It appears under the `心智圖` tag. `book_topic` and `reading_notes` intentionally have no default values or fixed options, so the user supplies the book title/chapter topic and note content directly. Its preview is `public/previews/reading-notes-mindmap.svg`.
 - `PATHOGEN_TRANSMISSION_HINTS` in `src/data/imageBanks.js` maps each `pathogen_disease` Chinese label to a localized transmission-route visual hint. `src/lib/imagePrompt.js` appends that hint when rendering values with `{ label, prompt }`, while `localizeImageOptionLabel()` keeps the select menu label short.
 - The pathogen disease bank should stay aligned with Taiwan CDC notifiable-disease naming. If adding/removing a disease option, update `PATHOGEN_TRANSMISSION_HINTS` at the same time and re-check that every option has a hint. Important examples: `登革熱` uses mosquito-vector symbols, and `漢他病毒症候群` uses mouse/rodent plus contaminated-dust/exposure symbols.
 - Pathogen preview assets live under `public/previews/`; the current poster preview is `public/previews/pathogen-cartoon-poster.png`.
@@ -91,7 +95,7 @@ When refreshing image data from PromptFill, convert `zh-tw` to `cn`, keep only t
 
 `src/lib/auditChecklist.js` `buildAuditChecklistBlock(value, language)` appends only checked review items. Keep language constraints out of the base template; if the user wants Taiwan Traditional Chinese, they can enable the `taiwan_traditional_chinese` checklist item.
 
-Image prompts use `src/lib/imagePrompt.js`, not `src/lib/render.js`. It renders repeated variables by occurrence count, resolves value priority as `imageSelections[uniqueKey]` → `imageSelections[key]` → template default selection → global image default, then localizes with `cn`/`en`. Missing values deliberately leave the original `{{key}}` visible.
+Image prompts use `src/lib/imagePrompt.js`, not `src/lib/render.js`. `renderImagePrompt(template, selections, language, promptTarget)` first resolves the active body through `getImageTemplateTextForTarget()` and `contentByTarget`, then renders repeated variables by occurrence count. Value priority is `imageSelections[uniqueKey]` → `imageSelections[key]` → template default selection → global image default, then localization with `cn`/`en`. Missing values deliberately leave the original `{{key}}` visible.
 
 ### Section count vs slide count
 
@@ -115,4 +119,5 @@ Railway via Dockerfile. The pattern is identical to PromptFill's — see `Docker
 - Commit messages mirror PromptFill: Chinese conventional commits (`feat:`, `fix:`, `chore:`).
 - No backend dependencies. Don't add API calls, telemetry, or external fonts (font names in pairings are passed as text into the prompt — they don't need to actually render in the UI).
 - LocalStorage keys are versioned: `spb_*_v1`. If a stored shape changes incompatibly, bump to `_v2` and write a one-time migration in `useLocalStorage` or `handleLoad`.
+- When adding a new image prompt target, update `IMAGE_PROMPT_TARGET_LABELS`, `getImagePromptTargets()` behavior if needed, target-aware template bodies, `OutputTargetPanel` copy, and saved-prompt load/save handling.
 - The `@/` import alias points to `src/` (configured in `vite.config.js`).

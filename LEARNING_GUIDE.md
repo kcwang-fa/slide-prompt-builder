@@ -12,7 +12,7 @@
 | **小而完整** | 約 3000 行 `src/` 程式碼、30 多個檔案；比 todo list 真實，但還沒有大到需要框架知識才能讀。 |
 | **真實但簡單** | 它真的可以用，不是 todo list。但沒有後端、沒有 router、沒有 TypeScript、沒有 Redux／Zustand 這類狀態管理函式庫。專心學 React 本身。 |
 | **完整生命週期** | 從本機開發、Tailwind 排版、LocalStorage 持久化，到 Docker 化、Railway 部署，全都涵蓋。 |
-| **看得到結果** | 你選個風格、按複製圖示、貼到 NotebookLM——**一條完整的「使用者旅程」**——比學課堂上的抽象 React 例子好玩。 |
+| **看得到結果** | 你可以做 NotebookLM 簡報 prompt，也可以做圖片 prompt；選模板、填欄位、按複製、貼到目標工具——**一條完整的「使用者旅程」**——比學課堂上的抽象 React 例子好玩。 |
 
 ---
 
@@ -68,7 +68,7 @@ npm install     # 大約 30 秒
 npm run dev     # 開啟 http://localhost:1421
 ```
 
-打開瀏覽器——你會看到一個簡報 prompt 產生器。
+打開瀏覽器——你會看到一個 prompt 工作台，可以在簡報與畫圖模式之間切換。
 
 ### 「`npm install` 到底在裝什麼？」
 
@@ -272,7 +272,7 @@ const summaryPrompt = useMemo(() => {
 
 意思：「只有當 `[]` 裡面的依賴變了，才重新跑這個函式。否則用上次的結果。」
 
-對小專案來說 `useMemo` 通常不必要。本專案用它來組出 NotebookLM 的兩段 prompt：第一段摘要 prompt 會看 `topic`、`selections`、`auditChecklist` 和 `normalizedSectionCount`；第二段風格 prompt 會看 `activeVisualMode`、`simpleVisualBrief` / `visualBrief` 和同一個章節數。這也是練習「依賴陣列必須列出所有用到的 state」的好地方。
+對小專案來說 `useMemo` 通常不必要。本專案用它來組出 NotebookLM 的兩段 prompt：第一段摘要 prompt 會看 `topic`、`selections`、`auditChecklist` 和 `normalizedSectionCount`；第二段風格 prompt 會看 `activeVisualMode`、`simpleVisualBrief` / `visualBrief` 和同一個章節數。畫圖模式也用同樣概念：圖片 prompt 會看 `activeImageTemplate`、`imageSelections`、`language` 和 `activeImagePromptTarget`。這也是練習「依賴陣列必須列出所有用到的 state」的好地方。
 
 ### `useEffect` — 副作用（與外界互動）
 
@@ -343,26 +343,45 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 8. **`src/components/SimpleBriefInput.jsx`**
    簡化版視覺設定。看它怎麼根據 `slideStyle` 排序色板與字型，並把使用者選擇回傳給上層。
 
-9. **`src/components/NotebookWorkflowGuide.jsx`**
+9. **`src/data/imageTemplates.js` + `src/data/imageBanks.js`**
+   畫圖模式的資料層。`imageTemplates.js` 定義模板、標籤、預覽圖、欄位與不同 target 的 prompt 文字；`imageBanks.js` 放下拉選單資料。心智圖模板 `tpl_reading_notes_mindmap` 就在這裡，書名/章節主題與讀書筆記內容故意不給預設值，讓使用者自行填入。模板加上 `recommended: true` 後，模板卡片和含有推薦模板的分類 chip 都會顯示推薦星號。
+
+10. **`src/lib/imagePrompt.js`**
+    畫圖模式的 render engine。它會依照目前的 prompt target（例如 Nano Banana 或 GPT Image）挑對應模板文字，再處理重複變數、預設值、語言 fallback 與 Markdown 清理。
+
+11. **`src/components/ImagePromptWorkspace.jsx`**
+    畫圖模式的主要 UI。看它怎麼做模板搜尋、分類篩選、推薦分類星號、預覽圖、推薦 badge、欄位表單，以及只有在模板支援多個 target 時才顯示 prompt target 切換。
+
+12. **`src/components/NotebookWorkflowGuide.jsx`**
    純展示元件。它把 NotebookLM 的外部操作流程放在 Prompt 分頁裡：上傳資料、取得摘要、儲存成記事、轉成來源並勾選、到工作室開自訂簡報、貼上風格說明。
 
-10. **`src/components/PromptOutput.jsx`**
+13. **`src/components/PromptOutput.jsx`**
    有 local state、有 async（`navigator.clipboard.writeText`），也有 module-level `Map`。重點看它怎麼判斷「目前這份 prompt 是否已複製」：只有內容完全相同才顯示綠色打勾；內容改了就回到橘色複製圖示。
 
-11. **`src/components/OutputTargetPanel.jsx`**
-   Prompt 分頁的組合元件。現在簡報模式只有 NotebookLM，所以單一工具 selector 會被隱藏；它負責把流程導覽和兩段 `<PromptOutput />` 排在一起。
+14. **`src/components/OutputTargetPanel.jsx`**
+   Prompt 分頁的組合元件。簡報模式只有 NotebookLM，所以單一工具 selector 會被隱藏；畫圖模式會依照目前圖片 prompt target 顯示對應標題與說明。它負責把流程導覽、圖片 prompt、與 `<PromptOutput />` 排在一起。
 
-12. **`src/components/SavedPromptsPanel.jsx`**
+15. **`src/components/SavedPromptsPanel.jsx`**
    最複雜的元件之一。有列表渲染、條件渲染（編輯模式 vs 顯示模式）、多個 callback。看懂它就 OK 了。
 
-13. **`src/components/CustomBriefInput.jsx`**
+16. **`src/components/CustomBriefInput.jsx`**
     最大的元件。看「狀態提升（lifting state up）」是怎麼做的——它自己沒有 `useState`，所有狀態都從 `App.jsx` 傳下來。它和 `SimpleBriefInput` 是同一個視覺設定目標的兩種 UI。
 
-14. **`src/App.jsx`**
-    所有東西的組合點。重點看三件事：state 集中管理、`useMemo` 生成兩段 prompt、`handleSave` / `handleLoad` 如何維持舊資料相容。
+17. **`src/App.jsx`**
+    所有東西的組合點。重點看三件事：state 集中管理、`useMemo` 生成簡報與圖片 prompt、`handleSave` / `handleLoad` 如何維持舊資料相容。
 
-15. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
+18. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
     跟 React 無關但跟「怎麼讓網站上線」有關。CS50 沒教的部分。
+
+畫圖模式的資料流可以這樣讀：
+
+```text
+imageTemplates/imageBanks
+→ ImagePromptWorkspace 讓使用者選模板、target、欄位
+→ App.jsx 保存 imageTemplateId、imagePromptTarget、imageSelections
+→ renderImagePrompt() 產生文字
+→ OutputTargetPanel / PromptOutput 顯示與複製
+```
 
 ---
 
@@ -388,7 +407,7 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 
 ### 挑戰
 
-10. **補完第二個輸出模式**：目前已有簡報與畫圖兩種輸出模式，但畫圖模式仍是建置中。請設計圖像 prompt 專用模板、接上 `OutputTargetPanel`，並想清楚 saved prompt 是否需要記住不同模式的設定。**這題會逼你做架構決策**——是這個專案最值得的一題。
+10. **新增一個圖片 prompt 模板**：畫圖模式已經可用，請在 `src/data/imageTemplates.js` 加一個新模板，必要時在 `src/data/imageBanks.js` 補選項，放一張 `public/previews/` 預覽圖，並確認 `npm run build` 通過。進階版：替同一個模板加 `contentByTarget`，讓 Nano Banana 與 GPT Image 使用不同 prompt wording，但共用同一組欄位。
 
 ---
 

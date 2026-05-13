@@ -1,5 +1,12 @@
 import { IMAGE_DEFAULTS, PATHOGEN_TRANSMISSION_HINTS } from '../data/imageBanks.js'
 
+export const DEFAULT_IMAGE_PROMPT_TARGET = 'nano_banana'
+
+export const IMAGE_PROMPT_TARGET_LABELS = {
+  nano_banana: { cn: 'Nano Banana', en: 'Nano Banana' },
+  gpt_image: { cn: 'GPT Image', en: 'GPT Image' },
+}
+
 export function localizeImageValue(value, language) {
   if (value === undefined || value === null) return ''
   if (typeof value === 'string') return value
@@ -39,6 +46,25 @@ export function getImageTemplateName(template, language) {
   return localizeImageValue(template?.name, language)
 }
 
+export function getImagePromptTargets(template) {
+  const targetMap = template?.contentByTarget
+  if (!targetMap || typeof targetMap !== 'object') return []
+  return Object.keys(targetMap)
+}
+
+export function normalizeImagePromptTarget(template, target) {
+  const targets = getImagePromptTargets(template)
+  if (targets.length === 0) return DEFAULT_IMAGE_PROMPT_TARGET
+  return targets.includes(target) ? target : targets[0]
+}
+
+export function getImageTemplateTextForTarget(template, language, promptTarget) {
+  const templateLanguage = getImageTemplateLanguage(template, language)
+  const normalizedTarget = normalizeImagePromptTarget(template, promptTarget)
+  const targetContent = template?.contentByTarget?.[normalizedTarget]
+  return localizeImageValue(targetContent || template?.content, templateLanguage)
+}
+
 export function getImageSelectionValue(template, selections, key, index) {
   const uniqueKey = `${key}-${index}`
   return (
@@ -50,8 +76,8 @@ export function getImageSelectionValue(template, selections, key, index) {
   )
 }
 
-export function getImageTemplateVariables(template, language) {
-  const text = getImageTemplateText(template, language)
+export function getImageTemplateVariables(template, language, promptTarget) {
+  const text = getImageTemplateTextForTarget(template, language, promptTarget)
   const matches = [...text.matchAll(/\{\{(.*?)\}\}/g)].map((match) => match[1].trim())
   const totals = matches.reduce((acc, key) => {
     acc[key] = (acc[key] || 0) + 1
@@ -71,9 +97,9 @@ export function getImageTemplateVariables(template, language) {
   })
 }
 
-export function renderImagePrompt(template, selections, language) {
+export function renderImagePrompt(template, selections, language, promptTarget) {
   const templateLanguage = getImageTemplateLanguage(template, language)
-  const text = getImageTemplateText(template, templateLanguage)
+  const text = getImageTemplateTextForTarget(template, templateLanguage, promptTarget)
   const counters = {}
 
   const rendered = text.replace(/\{\{(.*?)\}\}/g, (match, rawKey) => {

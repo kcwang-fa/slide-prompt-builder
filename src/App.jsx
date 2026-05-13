@@ -20,7 +20,7 @@ import {
   simpleVisualBriefToPreviewBrief,
 } from './lib/visualBrief.js'
 import { buildAuditChecklistBlock } from './lib/auditChecklist.js'
-import { renderImagePrompt } from './lib/imagePrompt.js'
+import { DEFAULT_IMAGE_PROMPT_TARGET, normalizeImagePromptTarget, renderImagePrompt } from './lib/imagePrompt.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
 import { useSavedPrompts } from './hooks/useSavedPrompts.js'
 
@@ -97,7 +97,7 @@ const OUTPUT_MODES = [
     id: 'image',
     icon: ImageIcon,
     label: { cn: '畫圖', en: 'Image' },
-    description: { cn: 'Nano Banana', en: 'Nano Banana' },
+    description: { cn: 'Nano Banana / GPT', en: 'Nano Banana / GPT' },
   },
 ]
 
@@ -210,6 +210,7 @@ export default function App() {
   const [visualBrief, setVisualBrief] = useLocalStorage('spb_visual_brief_v1', EMPTY_BRIEF)
   const [auditChecklist, setAuditChecklist] = useLocalStorage('spb_audit_checklist_v1', DEFAULT_AUDIT_CHECKLIST)
   const [imageTemplateId, setImageTemplateId] = useLocalStorage('spb_image_template_id_v1', IMAGE_TEMPLATES[0]?.id || '')
+  const [imagePromptTarget, setImagePromptTarget] = useLocalStorage('spb_image_prompt_target_v1', DEFAULT_IMAGE_PROMPT_TARGET)
   const [imageSelections, setImageSelections] = useLocalStorage('spb_image_selections_v1', {})
   const { savedPrompts, savePrompt, deletePrompt, renamePrompt } = useSavedPrompts()
 
@@ -275,6 +276,7 @@ export default function App() {
   const activeVisualMode = visualMode === 'advanced' ? 'advanced' : 'simple'
   const normalizedSectionCount = clampSectionCount(sectionCount)
   const activeImageTemplate = IMAGE_TEMPLATES.find((template) => template.id === imageTemplateId) || IMAGE_TEMPLATES[0]
+  const activeImagePromptTarget = normalizeImagePromptTarget(activeImageTemplate, imagePromptTarget)
 
   const summaryPrompt = useMemo(() => {
     const slideAudience = normalizeSlideAudience(selections.slide_audience, language)
@@ -313,8 +315,8 @@ export default function App() {
   )
 
   const imagePrompt = useMemo(
-    () => renderImagePrompt(activeImageTemplate, imageSelections, language),
-    [activeImageTemplate, imageSelections, language]
+    () => renderImagePrompt(activeImageTemplate, imageSelections, language, activeImagePromptTarget),
+    [activeImagePromptTarget, activeImageTemplate, imageSelections, language]
   )
 
   const updateSelection = (key, value) => {
@@ -350,6 +352,7 @@ export default function App() {
       auditChecklist,
       outputMode,
       imageTemplateId,
+      imagePromptTarget: activeImagePromptTarget,
       imageTemplateName: activeImageTemplate?.name,
       imageSelections,
     })
@@ -392,6 +395,9 @@ export default function App() {
     if (item.imageTemplateId && IMAGE_TEMPLATES.some((template) => template.id === item.imageTemplateId)) {
       setImageTemplateId(item.imageTemplateId)
     }
+    if (item.imagePromptTarget) {
+      setImagePromptTarget(item.imagePromptTarget)
+    }
     if (item.imageSelections) {
       setImageSelections(item.imageSelections)
     } else if (item.outputMode === 'image') {
@@ -426,6 +432,8 @@ export default function App() {
                 language={language}
                 templateId={activeImageTemplate?.id}
                 onTemplateChange={handleImageTemplateChange}
+                promptTarget={activeImagePromptTarget}
+                onPromptTargetChange={setImagePromptTarget}
                 selections={imageSelections}
                 onSelectionChange={updateImageSelection}
               />
@@ -433,6 +441,7 @@ export default function App() {
               <div className="space-y-6 lg:hidden">
                 <OutputTargetPanel
                   imagePrompt={imagePrompt}
+                  imagePromptTarget={activeImagePromptTarget}
                   outputType={outputMode}
                   language={language}
                 />
@@ -450,6 +459,7 @@ export default function App() {
             <aside className="hidden space-y-6 lg:sticky lg:top-20 lg:block">
               <OutputTargetPanel
                 imagePrompt={imagePrompt}
+                imagePromptTarget={activeImagePromptTarget}
                 outputType={outputMode}
                 language={language}
                 compact

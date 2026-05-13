@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react'
-import { Image as ImageIcon, RotateCcw, Search, Tags } from 'lucide-react'
+import { Image as ImageIcon, RotateCcw, Search, Star, Tags } from 'lucide-react'
 
 import { IMAGE_BANKS } from '../data/imageBanks.js'
 import { IMAGE_TEMPLATE_TAGS, IMAGE_TEMPLATES } from '../data/imageTemplates.js'
 import {
+  IMAGE_PROMPT_TARGET_LABELS,
   getImageSelectionValue,
+  getImagePromptTargets,
   getImageTemplateName,
   getImageTemplateVariables,
   localizeImageOptionLabel,
   localizeImageValue,
+  normalizeImagePromptTarget,
 } from '../lib/imagePrompt.js'
 
 const TAG_LABELS = {
@@ -19,6 +22,7 @@ const TAG_LABELS = {
   病原體: { cn: '病原體', en: 'Pathogens' },
   建築: { cn: '建築', en: 'Architecture' },
   圖表: { cn: '圖表', en: 'Diagram' },
+  心智圖: { cn: '心智圖', en: 'Mind Map' },
   卡通: { cn: '卡通', en: 'Cartoon' },
   遊戲: { cn: '遊戲', en: 'Game' },
   創意: { cn: '創意', en: 'Creative' },
@@ -27,6 +31,14 @@ const TAG_LABELS = {
 function tagLabel(tag, language) {
   return TAG_LABELS[tag]?.[language] || tag
 }
+
+function recommendedLabel(language) {
+  return language === 'cn' ? '推薦' : 'Recommended'
+}
+
+const RECOMMENDED_TEMPLATE_TAGS = new Set(
+  IMAGE_TEMPLATES.filter((template) => template.recommended).flatMap((template) => template.tags || [])
+)
 
 function optionIndexForValue(options, value, language) {
   const text = localizeImageValue(value, language)
@@ -93,12 +105,16 @@ export function ImagePromptWorkspace({
   language,
   templateId,
   onTemplateChange,
+  promptTarget,
+  onPromptTargetChange,
   selections,
   onSelectionChange,
 }) {
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState('')
   const activeTemplate = IMAGE_TEMPLATES.find((template) => template.id === templateId) || IMAGE_TEMPLATES[0]
+  const promptTargets = useMemo(() => getImagePromptTargets(activeTemplate), [activeTemplate])
+  const activePromptTarget = normalizeImagePromptTarget(activeTemplate, promptTarget)
 
   const filteredTemplates = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
@@ -114,6 +130,7 @@ export function ImagePromptWorkspace({
         getImageTemplateName(template, 'en'),
         template.author,
         ...(template.tags || []),
+        template.recommended ? 'recommended 推薦' : '',
       ]
         .filter(Boolean)
         .join(' ')
@@ -124,8 +141,8 @@ export function ImagePromptWorkspace({
   }, [activeTag, query])
 
   const fields = useMemo(
-    () => getImageTemplateVariables(activeTemplate, language),
-    [activeTemplate, language]
+    () => getImageTemplateVariables(activeTemplate, language, activePromptTarget),
+    [activeTemplate, activePromptTarget, language]
   )
 
   return (
@@ -164,20 +181,35 @@ export function ImagePromptWorkspace({
           >
             {language === 'cn' ? '全部' : 'All'}
           </button>
-          {IMAGE_TEMPLATE_TAGS.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => setActiveTag(activeTag === tag ? '' : tag)}
-              className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold transition ${
-                activeTag === tag
-                  ? 'border-orange-500 bg-orange-500 text-white'
-                  : 'border-zinc-200 bg-white text-zinc-500 hover:border-orange-300 hover:text-orange-600'
-              }`}
-            >
-              {tagLabel(tag, language)}
-            </button>
-          ))}
+          {IMAGE_TEMPLATE_TAGS.map((tag) => {
+            const isActiveTag = activeTag === tag
+            const isRecommendedTag = RECOMMENDED_TEMPLATE_TAGS.has(tag)
+            const label = tagLabel(tag, language)
+
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setActiveTag(isActiveTag ? '' : tag)}
+                title={isRecommendedTag ? `${label} · ${recommendedLabel(language)}` : label}
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition ${
+                  isActiveTag
+                    ? 'border-orange-500 bg-orange-500 text-white'
+                    : 'border-zinc-200 bg-white text-zinc-500 hover:border-orange-300 hover:text-orange-600'
+                }`}
+              >
+                {isRecommendedTag && (
+                  <Star
+                    size={12}
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className={isActiveTag ? 'text-white' : 'text-orange-500'}
+                  />
+                )}
+                {label}
+              </button>
+            )
+          })}
         </div>
 
         <div className="mt-4 grid max-h-[360px] grid-cols-1 gap-2 overflow-y-auto pr-1">
@@ -201,8 +233,16 @@ export function ImagePromptWorkspace({
                   loading="lazy"
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-black text-zinc-800">
-                    {getImageTemplateName(template, language)}
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="truncate text-sm font-black text-zinc-800">
+                      {getImageTemplateName(template, language)}
+                    </span>
+                    {template.recommended && (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-black text-orange-700">
+                        <Star size={10} fill="currentColor" />
+                        {recommendedLabel(language)}
+                      </span>
+                    )}
                   </span>
                   <span className="mt-1 block truncate text-[11px] font-semibold text-zinc-400">
                     {template.id}
@@ -229,9 +269,17 @@ export function ImagePromptWorkspace({
             className="aspect-[4/3] w-full rounded-lg bg-zinc-100 object-cover sm:w-44"
           />
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-black text-zinc-900">
-              {getImageTemplateName(activeTemplate, language)}
-            </h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-base font-black text-zinc-900">
+                {getImageTemplateName(activeTemplate, language)}
+              </h2>
+              {activeTemplate.recommended && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-[11px] font-black text-orange-700">
+                  <Star size={11} fill="currentColor" />
+                  {recommendedLabel(language)}
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-xs font-semibold text-zinc-400">
               {activeTemplate.author || 'PromptFill'} · {activeTemplate.id}
             </p>
@@ -243,6 +291,29 @@ export function ImagePromptWorkspace({
                 </span>
               ))}
             </div>
+            {promptTargets.length > 1 && (
+              <div className="mt-4 inline-flex rounded-lg border border-zinc-200 bg-zinc-50 p-1">
+                {promptTargets.map((target) => {
+                  const isActive = activePromptTarget === target
+                  const label = IMAGE_PROMPT_TARGET_LABELS[target]?.[language] || target
+
+                  return (
+                    <button
+                      key={target}
+                      type="button"
+                      onClick={() => onPromptTargetChange(target)}
+                      className={`rounded-md px-3 py-1.5 text-xs font-black transition ${
+                        isActive
+                          ? 'bg-zinc-900 text-white shadow-sm'
+                          : 'text-zinc-500 hover:bg-white hover:text-zinc-800'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
 

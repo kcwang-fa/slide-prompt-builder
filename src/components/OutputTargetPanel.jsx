@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Bot, Construction } from 'lucide-react'
 import { NotebookWorkflowGuide } from './NotebookWorkflowGuide.jsx'
 import { PromptOutput } from './PromptOutput.jsx'
+import { IMAGE_PROMPT_TARGET_LABELS } from '../lib/imagePrompt.js'
 
 const OUTPUT_TOOLS = {
   presentation: [
@@ -38,7 +39,7 @@ function ConstructionPanel({ language, toolLabel, compact }) {
   )
 }
 
-export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', imagePrompt = '', outputType, language, compact = false }) {
+export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', imagePrompt = '', imagePromptTarget = 'nano_banana', outputType, language, compact = false }) {
   const [toolByType, setToolByType] = useState({
     presentation: 'notebooklm',
     image: 'nano_banana',
@@ -54,6 +55,11 @@ export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', i
   const setActiveTool = (toolId) => {
     setToolByType((prev) => ({ ...prev, [outputType]: toolId }))
   }
+
+  const imageTargetLabel =
+    IMAGE_PROMPT_TARGET_LABELS[imagePromptTarget]?.[language] ||
+    IMAGE_PROMPT_TARGET_LABELS.nano_banana[language] ||
+    'Nano Banana'
 
   return (
     <section className="space-y-3">
@@ -125,13 +131,17 @@ export function OutputTargetPanel({ notebookPrompts = {}, notebookPrompt = '', i
               prompt={imagePrompt}
               language={language}
               compact={compact}
-              title={language === 'cn' ? 'Nano Banana 圖片 Prompt' : 'Nano Banana Image Prompt'}
-              copyLabel={language === 'cn' ? '複製 Nano Banana 圖片 Prompt' : 'Copy Nano Banana Image Prompt'}
-              copyStateKey="nano-banana-image"
+              title={language === 'cn' ? `${imageTargetLabel} 圖片 Prompt` : `${imageTargetLabel} Image Prompt`}
+              copyLabel={language === 'cn' ? `複製 ${imageTargetLabel} 圖片 Prompt` : `Copy ${imageTargetLabel} Image Prompt`}
+              copyStateKey={`${imagePromptTarget}-image`}
               helperText={
-                language === 'cn'
-                  ? '貼到 Nano Banana 的圖片生成輸入框；若要參考人物或產品，請一併上傳參考圖。'
-                  : 'Paste into Nano Banana image generation. Upload reference images as needed for people or products.'
+                imagePromptTarget === 'gpt_image'
+                  ? language === 'cn'
+                    ? '貼到 ChatGPT Image 的圖片生成輸入框；若要編輯既有圖片，請一併上傳參考圖。'
+                    : 'Paste into ChatGPT Image generation. Upload reference images if you want to edit or match an existing image.'
+                  : language === 'cn'
+                    ? '貼到 Nano Banana 的圖片生成輸入框；若要參考人物或產品，請一併上傳參考圖。'
+                    : 'Paste into Nano Banana image generation. Upload reference images as needed for people or products.'
               }
               editable
             />

@@ -2,11 +2,22 @@ import { useEffect, useMemo } from 'react'
 import { CheckSquare, Construction, FileText, Image as ImageIcon, Palette, Presentation, SlidersHorizontal, Sparkles } from 'lucide-react'
 
 import { BANKS, optionLabel } from './data/banks.js'
-import { NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE, NOTEBOOKLM_SUMMARY_TEMPLATE } from './data/template.js'
+import {
+  NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE,
+  NOTEBOOKLM_SIMPLE_PRESENTATION_STYLE_TEMPLATE,
+  NOTEBOOKLM_SUMMARY_TEMPLATE,
+} from './data/template.js'
 import { EMPTY_BRIEF } from './data/exampleBrief.js'
 import { AUDIT_CHECKLIST_ITEMS, DEFAULT_AUDIT_CHECKLIST } from './data/auditChecklist.js'
 import { render } from './lib/render.js'
-import { buildVisualBriefBlock } from './lib/visualBrief.js'
+import {
+  DEFAULT_SIMPLE_VISUAL_BRIEF,
+  buildSimpleVisualBriefBlock,
+  buildVisualBriefBlock,
+  hasAdvancedVisualBrief,
+  normalizeSimpleVisualBrief,
+  simpleVisualBriefToPreviewBrief,
+} from './lib/visualBrief.js'
 import { buildAuditChecklistBlock } from './lib/auditChecklist.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
 import { useSavedPrompts } from './hooks/useSavedPrompts.js'
@@ -15,6 +26,7 @@ import { LanguageToggle } from './components/LanguageToggle.jsx'
 import { TopicInput } from './components/TopicInput.jsx'
 import { VariableSelect } from './components/VariableSelect.jsx'
 import { SectionCountSlider } from './components/SectionCountSlider.jsx'
+import { SimpleBriefInput } from './components/SimpleBriefInput.jsx'
 import { CustomBriefInput } from './components/CustomBriefInput.jsx'
 import { SlidePreview } from './components/SlidePreview.jsx'
 import { AuditChecklist } from './components/AuditChecklist.jsx'
@@ -29,6 +41,10 @@ const DEFAULT_SELECTIONS = {
 }
 
 const AUDIT_CHECKLIST_DEFAULTS_MIGRATION_KEY = 'spb_audit_checklist_defaults_v2_migrated'
+const VISUAL_MODE_MIGRATION_KEY = 'spb_visual_mode_v1_migrated'
+const SECTION_COUNT_MIN = 1
+const SECTION_COUNT_MAX = 6
+const SECTION_COUNT_DEFAULT = 3
 
 const LEGACY_STYLE_FALLBACK = {
   meeting: 'teaching',
@@ -54,6 +70,19 @@ const WORKSPACE_TABS = [
   { id: 'prompt', icon: FileText, label: { cn: 'Prompt', en: 'Prompt' } },
 ]
 
+const VISUAL_MODES = [
+  {
+    id: 'simple',
+    label: { cn: '簡化版', en: 'Simple' },
+    description: { cn: '配色＋字型', en: 'Color + type' },
+  },
+  {
+    id: 'advanced',
+    label: { cn: '進階版', en: 'Advanced' },
+    description: { cn: '細部指示', en: 'Detailed brief' },
+  },
+]
+
 const OUTPUT_MODES = [
   {
     id: 'presentation',
@@ -71,6 +100,12 @@ const OUTPUT_MODES = [
 
 function isLegacyAllCheckedAuditChecklist(value) {
   return AUDIT_CHECKLIST_ITEMS.every((item) => value?.[item.id] === true)
+}
+
+function clampSectionCount(value) {
+  const numericValue = Number(value)
+  if (!Number.isFinite(numericValue)) return SECTION_COUNT_DEFAULT
+  return Math.min(SECTION_COUNT_MAX, Math.max(SECTION_COUNT_MIN, Math.round(numericValue)))
 }
 
 function selectionText(bankKey, optionId, customText, language) {
@@ -153,13 +188,47 @@ function OutputModeToggle({ outputMode, setOutputMode, language, compact = false
   )
 }
 
+function VisualModeToggle({ visualMode, setVisualMode, language }) {
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-white p-1 shadow-sm">
+      <div className="grid grid-cols-2 gap-1" role="tablist" aria-label={language === 'cn' ? '視覺設定模式' : 'Visual mode'}>
+        {VISUAL_MODES.map((mode) => {
+          const isActive = visualMode === mode.id
+
+          return (
+            <button
+              key={mode.id}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setVisualMode(mode.id)}
+              className={`min-h-10 rounded-lg px-3 py-2 text-sm font-black transition ${
+                isActive
+                  ? 'bg-zinc-900 text-white shadow-sm'
+                  : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800'
+              }`}
+            >
+              <span className="block">{mode.label[language] || mode.label.cn}</span>
+              <span className={`mt-0.5 block text-[10px] font-semibold ${isActive ? 'text-zinc-200' : 'text-zinc-400'}`}>
+                {mode.description[language] || mode.description.cn}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [language, setLanguage] = useLocalStorage('spb_language_v1', 'cn')
   const [outputMode, setOutputMode] = useLocalStorage('spb_output_mode_v1', 'presentation')
   const [activeTab, setActiveTab] = useLocalStorage('spb_active_tab_v1', 'basic')
   const [selections, setSelections] = useLocalStorage('spb_selections_v1', DEFAULT_SELECTIONS)
   const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
-  const [sectionCount, setSectionCount] = useLocalStorage('spb_section_count_v1', 5)
+  const [sectionCount, setSectionCount] = useLocalStorage('spb_section_count_v1', SECTION_COUNT_DEFAULT)
+  const [visualMode, setVisualMode] = useLocalStorage('spb_visual_mode_v1', 'simple')
+  const [simpleVisualBrief, setSimpleVisualBrief] = useLocalStorage('spb_simple_visual_brief_v1', DEFAULT_SIMPLE_VISUAL_BRIEF)
   const [visualBrief, setVisualBrief] = useLocalStorage('spb_visual_brief_v1', EMPTY_BRIEF)
   const [auditChecklist, setAuditChecklist] = useLocalStorage('spb_audit_checklist_v1', DEFAULT_AUDIT_CHECKLIST)
   const { savedPrompts, savePrompt, deletePrompt, renamePrompt } = useSavedPrompts()
@@ -182,9 +251,31 @@ export default function App() {
   }, [outputMode, setOutputMode])
 
   useEffect(() => {
+    if (VISUAL_MODES.some((mode) => mode.id === visualMode)) return
+    setVisualMode('simple')
+  }, [visualMode, setVisualMode])
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(VISUAL_MODE_MIGRATION_KEY) === 'true') return
+      localStorage.setItem(VISUAL_MODE_MIGRATION_KEY, 'true')
+    } catch {
+      return
+    }
+
+    if (hasAdvancedVisualBrief(visualBrief)) setVisualMode('advanced')
+  }, [visualBrief, setVisualMode])
+
+  useEffect(() => {
     if (WORKSPACE_TABS.some((tab) => tab.id === activeTab)) return
     setActiveTab('prompt')
   }, [activeTab, setActiveTab])
+
+  useEffect(() => {
+    const nextSectionCount = clampSectionCount(sectionCount)
+    if (nextSectionCount === sectionCount) return
+    setSectionCount(nextSectionCount)
+  }, [sectionCount, setSectionCount])
 
   useEffect(() => {
     const nextStyle = normalizeSlideStyle(selections.slide_style, language)
@@ -196,6 +287,8 @@ export default function App() {
 
   const slideStyle = normalizeSlideStyle(selections.slide_style, language)
   const requiresAudience = AUDIENCE_REQUIRED_STYLE_IDS.has(slideStyle)
+  const activeVisualMode = visualMode === 'advanced' ? 'advanced' : 'simple'
+  const normalizedSectionCount = clampSectionCount(sectionCount)
 
   const summaryPrompt = useMemo(() => {
     const slideAudience = normalizeSlideAudience(selections.slide_audience, language)
@@ -208,24 +301,47 @@ export default function App() {
       topic: topic.trim() || (language === 'cn' ? '（請填寫主題）' : '(topic placeholder)'),
       slide_style: slideStyleText,
       audience_background_block: buildAudienceBackgroundBlock(slideAudienceText, language),
-      section_count: String(sectionCount),
+      section_count: String(normalizedSectionCount),
       audit_checklist_block: buildAuditChecklistBlock(auditChecklist, language),
     })
-  }, [language, selections, slideStyle, requiresAudience, topic, sectionCount, auditChecklist])
+  }, [language, selections, slideStyle, requiresAudience, topic, normalizedSectionCount, auditChecklist])
 
   const stylePrompt = useMemo(() => {
-    const tpl = NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE[language] || NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE.cn
+    const templates =
+      activeVisualMode === 'advanced'
+        ? NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE
+        : NOTEBOOKLM_SIMPLE_PRESENTATION_STYLE_TEMPLATE
+    const tpl = templates[language] || templates.cn
     return render(tpl, {
-      custom_brief_block: buildVisualBriefBlock(visualBrief, language),
+      custom_brief_block:
+        activeVisualMode === 'advanced'
+          ? buildVisualBriefBlock(visualBrief, language)
+          : buildSimpleVisualBriefBlock(simpleVisualBrief, language),
+      section_count: String(normalizedSectionCount),
     })
-  }, [language, visualBrief])
+  }, [language, activeVisualMode, visualBrief, simpleVisualBrief, normalizedSectionCount])
+
+  const previewBrief = useMemo(
+    () => (activeVisualMode === 'advanced' ? visualBrief : simpleVisualBriefToPreviewBrief(simpleVisualBrief)),
+    [activeVisualMode, visualBrief, simpleVisualBrief]
+  )
 
   const updateSelection = (key, value) => {
     setSelections({ ...selections, [key]: value })
   }
 
   const handleSave = (name) => {
-    savePrompt({ name, topic, selections, sectionCount, visualBrief, auditChecklist, outputMode })
+    savePrompt({
+      name,
+      topic,
+      selections,
+      sectionCount: normalizedSectionCount,
+      visualMode: activeVisualMode,
+      simpleVisualBrief: normalizeSimpleVisualBrief(simpleVisualBrief),
+      visualBrief,
+      auditChecklist,
+      outputMode,
+    })
   }
 
   const handleLoad = (item) => {
@@ -238,14 +354,28 @@ export default function App() {
         slide_audience: normalizeSlideAudience(item.selections.slide_audience, language),
       })
     }
-    if (item.sectionCount) setSectionCount(item.sectionCount)
+    if (item.sectionCount) setSectionCount(clampSectionCount(item.sectionCount))
+    if (item.simpleVisualBrief) {
+      setSimpleVisualBrief(normalizeSimpleVisualBrief(item.simpleVisualBrief))
+    } else {
+      setSimpleVisualBrief(DEFAULT_SIMPLE_VISUAL_BRIEF)
+    }
+
+    let nextVisualBrief = EMPTY_BRIEF
     // 結構化 brief 優先；找不到再 fallback 到舊版字串 customBrief（前一版本格式）
     if (item.visualBrief) {
-      setVisualBrief({ ...EMPTY_BRIEF, ...item.visualBrief })
+      nextVisualBrief = { ...EMPTY_BRIEF, ...item.visualBrief }
     } else if (typeof item.customBrief === 'string') {
-      setVisualBrief({ ...EMPTY_BRIEF, notes: item.customBrief })
+      nextVisualBrief = { ...EMPTY_BRIEF, notes: item.customBrief }
+    }
+    setVisualBrief(nextVisualBrief)
+
+    if (VISUAL_MODES.some((mode) => mode.id === item.visualMode)) {
+      setVisualMode(item.visualMode)
+    } else if (hasAdvancedVisualBrief(nextVisualBrief)) {
+      setVisualMode('advanced')
     } else {
-      setVisualBrief(EMPTY_BRIEF)
+      setVisualMode('simple')
     }
     setAuditChecklist(item.auditChecklist ? { ...DEFAULT_AUDIT_CHECKLIST, ...item.auditChecklist } : DEFAULT_AUDIT_CHECKLIST)
     if (OUTPUT_MODES.some((mode) => mode.id === item.outputMode)) setOutputMode(item.outputMode)
@@ -326,15 +456,8 @@ export default function App() {
                     />
                   )}
                 </div>
-                {requiresAudience && (
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
-                    {language === 'cn'
-                      ? '簡報用途決定內容結構、資訊密度與任務重點；讀者背景決定術語深度、解釋程度與決策情境。若兩者看似衝突，請以讀者背景的理解需求優先。'
-                      : 'Deck purpose controls structure, density, and task emphasis; audience background controls terminology depth, explanation level, and decision context. If they conflict, prioritize the audience’s comprehension needs.'}
-                  </div>
-                )}
                 <SectionCountSlider
-                  value={sectionCount}
+                  value={normalizedSectionCount}
                   onChange={setSectionCount}
                   language={language}
                 />
@@ -342,14 +465,28 @@ export default function App() {
             )}
 
             {activeTab === 'visual' && (
-              <div role="tabpanel">
-                <CustomBriefInput
-                  value={visualBrief}
-                  onChange={setVisualBrief}
+              <div className="space-y-4" role="tabpanel">
+                <VisualModeToggle
+                  visualMode={activeVisualMode}
+                  setVisualMode={setVisualMode}
                   language={language}
-                  slideStyle={slideStyle}
-                  forceOpen
                 />
+                {activeVisualMode === 'simple' ? (
+                  <SimpleBriefInput
+                    value={simpleVisualBrief}
+                    onChange={setSimpleVisualBrief}
+                    language={language}
+                    slideStyle={slideStyle}
+                  />
+                ) : (
+                  <CustomBriefInput
+                    value={visualBrief}
+                    onChange={setVisualBrief}
+                    language={language}
+                    slideStyle={slideStyle}
+                    forceOpen
+                  />
+                )}
               </div>
             )}
 
@@ -376,9 +513,9 @@ export default function App() {
             <div className="lg:hidden space-y-6 pt-2">
               {outputMode === 'presentation' && (
                 <SlidePreview
-                  brief={visualBrief}
+                  brief={previewBrief}
                   topic={topic}
-                  sectionCount={sectionCount}
+                  sectionCount={normalizedSectionCount}
                   language={language}
                 />
               )}
@@ -396,9 +533,9 @@ export default function App() {
           <aside className="hidden lg:block lg:sticky lg:top-20 space-y-6">
             {outputMode === 'presentation' && (
               <SlidePreview
-                brief={visualBrief}
+                brief={previewBrief}
                 topic={topic}
-                sectionCount={sectionCount}
+                sectionCount={normalizedSectionCount}
                 language={language}
                 compact
               />

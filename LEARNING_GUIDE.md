@@ -1,7 +1,7 @@
 # 學習指南：用這個專案做為 CS50 之後的下一站
 
 > **這份指南是寫給誰看的？**
-> 你剛讀完 CS50（不管是 CS50x 通識版、CS50W Web Programming 還是 CS50P Python 版），會 Python／C／HTML／CSS、用過 SQL、寫過 Flask 小作業。現在想學「**現代前端是怎麼蓋起來的**」，但 React 官方教學翻幾頁就投降。這份指南會用這個 600 行的小專案當教材，帶你過一遍核心觀念、推薦閱讀順序、和練習題。
+> 你剛讀完 CS50（不管是 CS50x 通識版、CS50W Web Programming 還是 CS50P Python 版），會 Python／C／HTML／CSS、用過 SQL、寫過 Flask 小作業。現在想學「**現代前端是怎麼蓋起來的**」，但 React 官方教學翻幾頁就投降。這份指南會用這個約 3000 行的單頁專案當教材，帶你過一遍核心觀念、推薦閱讀順序、和練習題。
 
 ---
 
@@ -9,7 +9,7 @@
 
 | 條件 | 為什麼重要 |
 |---|---|
-| **小** | 只有 ~600 行原始碼、20 個檔案。一個下午看得完。 |
+| **小而完整** | 約 3000 行 `src/` 程式碼、30 多個檔案；比 todo list 真實，但還沒有大到需要框架知識才能讀。 |
 | **真實但簡單** | 它真的可以用，不是 todo list。但沒有後端、沒有 router、沒有 TypeScript、沒有 Redux／Zustand 這類狀態管理函式庫。專心學 React 本身。 |
 | **完整生命週期** | 從本機開發、Tailwind 排版、LocalStorage 持久化，到 Docker 化、Railway 部署，全都涵蓋。 |
 | **看得到結果** | 你選個風格、按複製、貼到 NotebookLM——**一條完整的「使用者旅程」**——比學課堂上的抽象 React 例子好玩。 |
@@ -86,10 +86,10 @@ npm run dev     # 開啟 http://localhost:1421
 打開 `src/App.jsx`，找到：
 
 ```jsx
-{language === 'cn' ? 'NotebookLM 簡報 Prompt 產生器' : 'NotebookLM Slide Prompt Builder'}
+{language === 'cn' ? '專業報告 Prompt 工作台' : 'Professional Report Prompt Workspace'}
 ```
 
-把「簡報 Prompt 產生器」改成「PPT 神器」，存檔。**不用 reload 瀏覽器**——你會看到頁面自動更新。這叫 **hot module replacement (HMR)**，是現代前端工具鏈最直觀的差別之一。
+把中文標題暫時改成「PPT 神器」，存檔。**不用 reload 瀏覽器**——你會看到頁面自動更新。這叫 **hot module replacement (HMR)**，是現代前端工具鏈最直觀的差別之一。
 
 ---
 
@@ -265,14 +265,14 @@ const [topic, setTopic] = useState('')
 ### `useMemo` — 快取昂貴計算
 
 ```jsx
-const generated = useMemo(() => {
+const summaryPrompt = useMemo(() => {
   return render(template, values)
-}, [language, selections, topic, sectionCount, visualBrief])
+}, [language, selections, topic, normalizedSectionCount])
 ```
 
 意思：「只有當 `[]` 裡面的依賴變了，才重新跑這個函式。否則用上次的結果。」
 
-對小專案來說 `useMemo` 通常不必要。本專案用了一次，是因為 `render` 的字串拼接每次 render 都跑會浪費——這是合理的優化時機。
+對小專案來說 `useMemo` 通常不必要。本專案用它來組出 NotebookLM 的兩段 prompt：第一段摘要 prompt 會看 `topic`、`selections`、`auditChecklist` 和 `normalizedSectionCount`；第二段風格 prompt 會看 `activeVisualMode`、`simpleVisualBrief` / `visualBrief` 和同一個章節數。這也是練習「依賴陣列必須列出所有用到的 state」的好地方。
 
 ### `useEffect` — 副作用（與外界互動）
 
@@ -328,11 +328,11 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 3. **`src/lib/render.js`** （5 行）
    一個純函式：吃一個範本字串和一個 values 物件，回傳替換完的字串。練習正規表達式。
 
-4. **`src/components/VariableSelect.jsx`** （20 行）
-   最小的有意義元件。接收 `bankKey`、`value`、`onChange` 三個 props，渲染一個 `<select>`。看「props 怎麼傳進來、事件怎麼往外送」。
+4. **`src/components/VariableSelect.jsx`**
+   最小的有意義元件之一。接收 `bankKey`、`value`、`onChange` 等 props，渲染卡片式選項與自訂輸入。看「props 怎麼傳進來、事件怎麼往外送」。
 
 5. **`src/components/TopicInput.jsx`** + **`SectionCountSlider.jsx`**
-   結構類似的小元件。
+   結構類似的小元件。`SectionCountSlider` 特別值得看：它是一個 controlled component，用 `value` 顯示目前主體章節數，用 `onChange` 把 slider 變更送回 `App.jsx`，並即時計算估計投影片張數。
 
 6. **`src/hooks/useLocalStorage.js`**
    第一個自訂 hook。看完上面解釋之後再讀程式碼會很快。
@@ -340,19 +340,22 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 7. **`src/hooks/useSavedPrompts.js`**
    一個「hook 用 hook」的例子。對照 `App.jsx` 怎麼用它。
 
-8. **`src/components/PromptOutput.jsx`**
+8. **`src/components/SimpleBriefInput.jsx`**
+   簡化版視覺設定。看它怎麼根據 `slideStyle` 排序色板與字型，並把使用者選擇回傳給上層。
+
+9. **`src/components/PromptOutput.jsx`**
    有 local state（`copied`）、有 async（`navigator.clipboard.writeText`）、有 setTimeout。比前面的元件複雜一階。
 
-9. **`src/components/SavedPromptsPanel.jsx`**
+10. **`src/components/SavedPromptsPanel.jsx`**
    最複雜的元件之一。有列表渲染、條件渲染（編輯模式 vs 顯示模式）、多個 callback。看懂它就 OK 了。
 
-10. **`src/components/CustomBriefInput.jsx`**
-    最大的元件。看「狀態提升（lifting state up）」是怎麼做的——它自己沒有 `useState`，所有狀態都從 `App.jsx` 傳下來。
+11. **`src/components/CustomBriefInput.jsx`**
+    最大的元件。看「狀態提升（lifting state up）」是怎麼做的——它自己沒有 `useState`，所有狀態都從 `App.jsx` 傳下來。它和 `SimpleBriefInput` 是同一個視覺設定目標的兩種 UI。
 
-11. **`src/App.jsx`** （117 行）
-    所有東西的組合點。看完再看就一目了然。
+12. **`src/App.jsx`**
+    所有東西的組合點。重點看三件事：state 集中管理、`useMemo` 生成兩段 prompt、`handleSave` / `handleLoad` 如何維持舊資料相容。
 
-12. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
+13. **`Dockerfile` + `nginx.conf.template` + `railway.json`**
     跟 React 無關但跟「怎麼讓網站上線」有關。CS50 沒教的部分。
 
 ---
@@ -363,23 +366,23 @@ const [topic, setTopic] = useLocalStorage('spb_topic_v1', '')
 
 1. 在 `src/data/banks.js` 的 `slide_audience` 加一個新選項：「投資人 — 強調市場規模與商業模式」。存檔，重新整理瀏覽器，看下拉選單有沒有出現。
 2. 改 `src/App.jsx` 的 footer 文字，加上你的名字（「Made by 你的名字」）。
-3. 在 `src/data/palettes.js` 加一個新色板「日系雜誌」（自己挑三色）。存檔，去進階區看色板列。
+3. 在 `src/data/palettes.js` 加一個新色板「日系雜誌」（自己挑三色）。存檔，去「視覺設定」看色板列。
 
 ### 中等
 
 4. **不用任何 hook**，純粹用 props，寫一個元件 `<CharCounter text={topic} />` 顯示主題的字數，放在 `<TopicInput>` 下面。
-5. 加一個按鈕「重設所有選項」，按下去後所有 state 回到預設值（`topic`、`selections`、`sectionCount`、`visualBrief` 都清空）。
+5. 加一個按鈕「重設所有選項」，按下去後所有 state 回到預設值（至少包含 `topic`、`selections`、`sectionCount`、`visualMode`、`simpleVisualBrief`、`visualBrief`、`auditChecklist`）。
 6. 在 `<SavedPromptsPanel>` 加一個「依時間排序／依字母排序」切換。
 
 ### 進階
 
-7. **歷史紀錄**：每次 prompt 變動就存進 LocalStorage，最多保留 10 筆，可以「undo」回到上一份。提示：用 `useEffect` 監聽 `generated`，再用一個 ring buffer。
+7. **歷史紀錄**：每次 prompt 變動就存進 LocalStorage，最多保留 10 筆，可以「undo」回到上一份。提示：用 `useEffect` 監聽 `summaryPrompt` 和 `stylePrompt`，再用一個 ring buffer。
 8. **匯出 JSON**：在收藏面板加一個「匯出全部」按鈕，把所有 saved prompts 下載成一個 `.json` 檔。提示：`Blob` + `URL.createObjectURL` + 一個隱藏的 `<a download>`。
 9. **匯入 JSON**：對應上一題。`<input type="file">` + `FileReader`。
 
 ### 挑戰
 
-10. **多平台支援**：把這個工具從只支援 NotebookLM，擴充成 NotebookLM／Gamma／其他三選一。需要設計新的資料結構（每個平台有自己的範本與適用變數）、調整 UI（增加平台選擇器）、想清楚已儲存的 prompt 怎麼相容舊資料。**這題會逼你做架構決策**——是這個專案最值得的一題。
+10. **補完第二個輸出目標**：目前輸出目標已有 NotebookLM 與 Gemma 的位置，但 Gemma 還是建置中。請設計 Gemma 專用模板、接上 `OutputTargetPanel`，並想清楚 saved prompt 是否需要記住不同平台的設定。**這題會逼你做架構決策**——是這個專案最值得的一題。
 
 ---
 

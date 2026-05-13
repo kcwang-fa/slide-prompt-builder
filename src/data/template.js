@@ -47,6 +47,8 @@ Create a content summary from the sources in my current notebook for later slide
 export const NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE = {
   cn: `請依據 Notebook 來源建立簡報。
 
+請將內容安排為約 {{section_count}} 個主體章節；這是內容結構目標，不是硬性的總投影片張數。
+
 **視覺與版面要求：**
 - 字體、留白與版面密度需一致，並服務簡報內容，不要只追求裝飾效果
 - 預設每張內容投影片至多 5 個重點項目；資訊複雜時優先使用表格、流程圖、對照圖或時間軸
@@ -56,10 +58,30 @@ export const NOTEBOOKLM_PRESENTATION_STYLE_TEMPLATE = {
 
   en: `Create a slide deck based on the Notebook sources.
 
+Organize the deck into about {{section_count}} body sections; this is a structure target, not a strict total slide count.
+
 **Visual & Layout Requirements:**
 - Keep typography, whitespace, and layout density consistent and in service of the content rather than decorative.
 - Use up to 5 key points per content slide by default; when information is complex, prefer tables, flowcharts, comparison diagrams, or timelines.
 - Prefer visuals: comparison tables, flowcharts, and timelines beat plain text whenever possible.
 - Every slide needs a clear title, and key takeaways should be easy to scan.
+{{custom_brief_block}}`,
+}
+
+export const NOTEBOOKLM_SIMPLE_PRESENTATION_STYLE_TEMPLATE = {
+  cn: `請依據 Notebook 來源建立簡報。
+
+請將內容安排為約 {{section_count}} 個主體章節；這是內容結構目標，不是硬性的總投影片張數。
+每張投影片至多 5 個重點。
+資訊複雜時用表格、流程圖或時間軸，避免整頁純文字。
+每張投影片要有清楚標題。
+{{custom_brief_block}}`,
+
+  en: `Create a slide deck based on the Notebook sources.
+
+Organize the deck into about {{section_count}} body sections; this is a structure target, not a strict total slide count.
+Use up to 5 key points per slide.
+When information is complex, use tables, flowcharts, or timelines; avoid full-text slides.
+Every slide needs a clear title.
 {{custom_brief_block}}`,
 }

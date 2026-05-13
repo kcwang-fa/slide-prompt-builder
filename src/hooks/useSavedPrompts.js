@@ -1,7 +1,7 @@
 import { useLocalStorage } from './useLocalStorage.js'
 
 const STORAGE_KEY = 'spb_saved_prompts_v1'
-const SAVED_PROMPT_SCHEMA_VERSION = 2
+const SAVED_PROMPT_SCHEMA_VERSION = 3
 
 export function useSavedPrompts() {
   const [savedPrompts, setSavedPrompts] = useLocalStorage(STORAGE_KEY, [])

@@ -8,7 +8,7 @@ export const EXAMPLE_BRIEF = {
     accent: '#FF6B5B',
     headingFont: 'Noto Sans TC Bold',
     bodyFont: 'Noto Serif TC',
-    designTerms: ['flat_icons', 'high_negative_space', 'infographic_first', 'data_badges'],
+    designTerms: ['clear_hierarchy', 'grid_alignment', 'infographic_first'],
     notes: `輔助色使用鐵灰色與淺灰色進行區塊分割。
 主色 #003366 象徵專業權威；強調色用於關鍵數據（如重症、住院率）。`,
   },
@@ -19,7 +19,7 @@ export const EXAMPLE_BRIEF = {
     accent: '#FF6B5B',
     headingFont: 'Noto Sans TC Bold',
     bodyFont: 'Noto Serif TC',
-    designTerms: ['flat_icons', 'high_negative_space', 'infographic_first', 'data_badges'],
+    designTerms: ['clear_hierarchy', 'grid_alignment', 'infographic_first'],
     notes: `Secondary palette: iron-gray and light-gray for section dividers.
 The primary #003366 conveys authority; the accent is reserved for key metrics (e.g. severe cases, hospitalization rate).`,
   },

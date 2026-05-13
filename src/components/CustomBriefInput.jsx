@@ -11,7 +11,12 @@ import {
 import { EXAMPLE_BRIEF, EMPTY_BRIEF } from '../data/exampleBrief.js'
 import { PALETTES } from '../data/palettes.js'
 import { FONT_PAIRINGS } from '../data/fontPairings.js'
-import { DESIGN_TERMS } from '../data/designTerms.js'
+import {
+  DESIGN_TERMS,
+  DESIGN_TERM_RECOMMENDED_LIMIT,
+  designTermById,
+  recommendedDesignTermsForStyle,
+} from '../data/designTerms.js'
 
 const TERM_ICONS = {
   flat_icons: Shapes,
@@ -120,15 +125,24 @@ function PairingChip({ pairing, onApply, isMatch, isActive, language }) {
   )
 }
 
-function DesignTermChip({ term, isActive, onToggle, language }) {
+function localized(value, language) {
+  return value?.[language] || value?.cn || ''
+}
+
+function DesignTermChip({ term, isActive, isRecommended, onToggle, language }) {
   const Icon = TERM_ICONS[term.id] || Sparkles
+  const description = localized(term.description, language)
+  const guidance = localized(term.guidance, language)
+  const guidanceClasses = term.guidanceTone === 'caution'
+    ? 'bg-amber-50 text-amber-800'
+    : 'bg-zinc-50 text-zinc-500'
 
   return (
     <button
       type="button"
       onClick={() => onToggle(term.id)}
-      title={term.description[language] || term.description.cn}
-      className={`min-h-[76px] rounded-lg border px-3 py-2 text-left transition flex items-start gap-2 ${
+      title={[description, guidance].filter(Boolean).join('\n')}
+      className={`min-h-[102px] rounded-lg border px-3 py-2 text-left transition flex items-start gap-2 ${
         isActive
           ? 'border-orange-500 bg-orange-50 text-zinc-900'
           : 'border-zinc-200 bg-white hover:border-orange-300 hover:bg-orange-50'
@@ -142,10 +156,22 @@ function DesignTermChip({ term, isActive, onToggle, language }) {
         <Icon size={15} />
       </span>
       <span className="min-w-0">
-        <span className="block text-xs font-bold text-zinc-700">{term.label[language] || term.label.cn}</span>
-        <span className="mt-0.5 block text-[11px] leading-snug text-zinc-500">
-          {term.description[language] || term.description.cn}
+        <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <span className="block text-xs font-bold text-zinc-700">{localized(term.label, language)}</span>
+          {isRecommended && (
+            <span className="rounded bg-orange-100 px-1.5 py-0.5 text-[9px] font-bold text-orange-700">
+              {language === 'cn' ? '推薦' : 'Recommended'}
+            </span>
+          )}
         </span>
+        <span className="mt-0.5 block text-[11px] leading-snug text-zinc-500">
+          {description}
+        </span>
+        {guidance && (
+          <span className={`mt-1 block rounded-md px-2 py-1 text-[10px] leading-snug ${guidanceClasses}`}>
+            {guidance}
+          </span>
+        )}
       </span>
     </button>
   )
@@ -158,6 +184,14 @@ export function CustomBriefInput({ value, onChange, language, slideStyle, forceO
     return Boolean(v && String(v).length > 0)
   })
   const selectedDesignTerms = Array.isArray(value.designTerms) ? value.designTerms : []
+  const recommendedDesignTerms = recommendedDesignTermsForStyle(slideStyle)
+  const selectedTermCount = selectedDesignTerms.length
+  const isOverRecommendedTermCount = selectedTermCount > DESIGN_TERM_RECOMMENDED_LIMIT
+  const recommendedTermLabels = recommendedDesignTerms
+    .map((termId) => designTermById(termId))
+    .filter(Boolean)
+    .map((term) => localized(term.label, language))
+    .join(language === 'cn' ? '、' : ', ')
 
   const updateField = (key, val) => onChange({ ...value, [key]: val })
 
@@ -189,6 +223,13 @@ export function CustomBriefInput({ value, onChange, language, slideStyle, forceO
     onChange({
       ...value,
       designTerms: next,
+    })
+  }
+
+  const applyRecommendedDesignTerms = () => {
+    onChange({
+      ...value,
+      designTerms: recommendedDesignTerms,
     })
   }
 
@@ -346,16 +387,47 @@ export function CustomBriefInput({ value, onChange, language, slideStyle, forceO
         )}
 
         {activeSection === 'terms' && (
-          <div>
-            <div className="text-xs font-semibold text-zinc-600 mb-2">
-              {language === 'cn' ? '設計語彙（點擊加入 Prompt）' : 'Design Terms (click to include)'}
+          <div className="space-y-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="text-xs font-semibold text-zinc-600">
+                  {language === 'cn' ? '設計語彙（建議最多 3 個）' : 'Design Terms (up to 3 recommended)'}
+                </div>
+                <div className={`mt-1 text-[11px] font-semibold ${
+                  isOverRecommendedTermCount ? 'text-amber-700' : 'text-zinc-400'
+                }`}>
+                  {isOverRecommendedTermCount
+                    ? language === 'cn'
+                      ? `已選 ${selectedTermCount} 個，可能讓風格要求互相拉扯`
+                      : `${selectedTermCount} selected; style instructions may start to conflict`
+                    : language === 'cn'
+                      ? `已選 ${selectedTermCount} / 建議 ${DESIGN_TERM_RECOMMENDED_LIMIT}`
+                      : `${selectedTermCount} selected / ${DESIGN_TERM_RECOMMENDED_LIMIT} recommended`}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={applyRecommendedDesignTerms}
+                className="inline-flex min-h-8 shrink-0 items-center justify-center rounded-md border border-orange-200 bg-orange-50 px-2.5 py-1 text-xs font-bold text-orange-700 hover:border-orange-300 hover:bg-orange-100"
+              >
+                {language === 'cn' ? '套用推薦組合' : 'Apply recommended set'}
+              </button>
             </div>
+
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-[11px] leading-relaxed text-zinc-500">
+              <span className="font-bold text-zinc-600">
+                {language === 'cn' ? '推薦：' : 'Recommended: '}
+              </span>
+              {recommendedTermLabels}
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {DESIGN_TERMS.map((term) => (
                 <DesignTermChip
                   key={term.id}
                   term={term}
                   isActive={selectedDesignTerms.includes(term.id)}
+                  isRecommended={recommendedDesignTerms.includes(term.id)}
                   onToggle={toggleDesignTerm}
                   language={language}
                 />

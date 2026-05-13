@@ -4,9 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A single-page tool that composes two structured prompts for **NotebookLM** slide-deck generation. The first prompt is pasted into NotebookLM chat to create a source-grounded summary from the basic settings and review checklist. After NotebookLM answers, the user saves that answer as a note, converts the note into a source, selects that source, opens Studio → Custom presentation, and pastes the second prompt into the "describe the presentation to create" field. The second prompt carries the body-section target plus the selected visual/style instructions. Everything is client-side — no backend, no router, no AI calls. Vite + React 18 + Tailwind.
+A single-page prompt workspace with two output modes:
 
-This project was forked-in-spirit from `~/PromptFill` (a much larger AI-art prompt-fill tool) but is **intentionally minimal**: only the variable+template engine concept was kept. Do not import Prompt Fill's masonry, html2canvas export, IndexedDB, video preview, AI services, sharing, or smart-split features unless explicitly asked.
+- **Presentation**: composes two structured prompts for **NotebookLM** slide-deck generation. The first prompt is pasted into NotebookLM chat to create a source-grounded summary from the basic settings and review checklist. After NotebookLM answers, the user saves that answer as a note, converts the note into a source, selects that source, opens Studio → Custom presentation, and pastes the second prompt into the "describe the presentation to create" field.
+- **Image**: composes **Nano Banana** image-generation prompts from converted PromptFill image templates.
+
+Everything is client-side — no backend, no router, no AI calls. Vite + React 18 + Tailwind.
+
+This project was forked-in-spirit from `~/PromptFill` (a much larger AI-art prompt-fill tool) but is **intentionally minimal**. Presentation mode kept only the variable+template engine concept. Image mode now includes a curated copy of PromptFill's built-in image prompt data, converted into this repo's own `cn`/`en` data shape. Do not runtime-import PromptFill or bring over PromptFill's masonry, html2canvas export, IndexedDB, video preview, AI services, sharing, or smart-split features unless explicitly asked.
 
 ## Common Commands
 
@@ -17,7 +22,7 @@ npm run build     # → dist/
 npm run preview   # Serve dist/ for local sanity check
 ```
 
-There is no lint config and no test suite. The validation gate is "open it in the browser, click around, copy a prompt, paste into NotebookLM."
+There is no lint config and no test suite. The validation gate is `npm run build`, then open it in the browser, click around, copy a prompt, and paste into the target tool (NotebookLM for presentation mode, Nano Banana for image mode).
 
 ## Architecture
 
@@ -26,7 +31,7 @@ There is no lint config and no test suite. The validation gate is "open it in th
 All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, debounced via React render). Main top-level pieces:
 
 - `language` — `'cn'` / `'en'`
-- `outputMode` — `'presentation'` / `'image'`. Image mode is currently a placeholder.
+- `outputMode` — `'presentation'` / `'image'`.
 - `activeTab` — workspace tab id (`basic`, `visual`, `audit`, `prompt`).
 - `selections` — `{ slide_style, slide_audience, slide_style_custom, slide_audience_custom }`. The legacy key names remain for compatibility, but the UI labels are now **簡報用途** and **讀者背景**. `slide_audience` is only shown and rendered for audience-sensitive purposes (`teaching`, `sketchnote`, `minimal`). `slide_style_custom` and `slide_audience_custom` are used only when the corresponding option id is `'custom'`.
 - `topic` — free text. `TopicInput` receives the normalized `slideStyle` and changes its placeholder example to match the selected deck purpose; this is only a hint and never auto-fills the topic.
@@ -35,10 +40,12 @@ All state lives in `App.jsx` and persists via `useLocalStorage` (LocalStorage, d
 - `simpleVisualBrief` — `{ paletteId, fontPairingId }`, normalized through `normalizeSimpleVisualBrief()` and rendered into the simple style prompt.
 - `visualBrief` — advanced structured object: `{ background, primary, accent, headingFont, bodyFont, designTerms, notes }`. All fields optional. **This shape replaced an earlier flat string `customBrief`** — the loader in `handleLoad` migrates old saved prompts (`item.customBrief: string` → `visualBrief.notes`).
 - `auditChecklist` — object keyed by item id. Default checked items are only `no_external_inference` and `neutral_tone`; all other review items start unchecked. A one-time migration in `App.jsx` moves old "everything checked" LocalStorage state to the new default.
+- `imageTemplateId` — selected PromptFill-derived image template id, persisted at `spb_image_template_id_v1`.
+- `imageSelections` — image-template variable overrides keyed by unique variable occurrence (`grid_pose-0`, `lens_param-8`, etc.), persisted at `spb_image_selections_v1`.
 
-Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. New entries use `schemaVersion: 2` and store `{ id, schemaVersion, name, createdAt, topic, selections, sectionCount, visualMode, simpleVisualBrief, visualBrief, auditChecklist, outputMode }`. Managed by `hooks/useSavedPrompts.js`.
+Saved prompts (the "我的收藏" feature) live at LocalStorage key `spb_saved_prompts_v1`. New entries use `schemaVersion: 3` and store `{ id, schemaVersion, name, createdAt, topic, selections, sectionCount, visualMode, simpleVisualBrief, visualBrief, auditChecklist, outputMode, imageTemplateId, imageTemplateName, imageSelections }`. Managed by `hooks/useSavedPrompts.js`.
 
-### Control Surfaces
+### Presentation Control Surfaces
 
 The UI has four distinct control areas for the two-step output:
 
@@ -53,6 +60,23 @@ The basic purpose description goes into the chat summary prompt as a bullet; aud
 
 The chat summary prompt asks NotebookLM to output only two sections: `核心重點` and `可用於簡報的章節或頁面素材` (English: `Core points` and `Slide sections or page material`). Keep fixed citation/fidelity wording out of the base template; those constraints should come from the optional review checklist when enabled.
 
+### Image Mode
+
+Image mode replaces the old placeholder with a PromptFill-derived template workflow:
+
+- Data lives in `src/data/imageTemplates.js` and `src/data/imageBanks.js`. These files are copied/converted data, not runtime imports from PromptFill.
+- `src/components/ImagePromptWorkspace.jsx` owns the image UI: template search, tag filtering, template preview image, and variable fields.
+- `src/lib/imagePrompt.js` owns image prompt rendering, localization, supported-language fallback, repeated-variable occurrence handling, and Markdown cleanup.
+- `src/components/OutputTargetPanel.jsx` exposes only **Nano Banana** for `outputType === 'image'`. ChatGPT Image is intentionally not wired yet.
+- Imported PromptFill templates are curated: `tpl_default` and `tpl_fashion` are excluded because their template bodies contain explicit private/adult-oriented content. Keep that exclusion unless the user explicitly changes the content policy.
+- `fruit_1` is intentionally represented as its own image bank key, aliased from PromptFill's `fruit` data, because the Japanese product poster template uses `{{fruit_1}}`.
+- `tpl_pathogen_cartoon_poster` is a local custom image template for cute educational pathogen posters. It is intentionally broad enough for American cartoon, Japanese mascot/anime, flat vector, sticker, children's book, and science-magazine styles. Keep it non-clinical and non-gory.
+- `PATHOGEN_TRANSMISSION_HINTS` in `src/data/imageBanks.js` maps each `pathogen_disease` Chinese label to a localized transmission-route visual hint. `src/lib/imagePrompt.js` appends that hint when rendering values with `{ label, prompt }`, while `localizeImageOptionLabel()` keeps the select menu label short.
+- The pathogen disease bank should stay aligned with Taiwan CDC notifiable-disease naming. If adding/removing a disease option, update `PATHOGEN_TRANSMISSION_HINTS` at the same time and re-check that every option has a hint. Important examples: `登革熱` uses mosquito-vector symbols, and `漢他病毒症候群` uses mouse/rodent plus contaminated-dust/exposure symbols.
+- Pathogen preview assets live under `public/previews/`; the current poster preview is `public/previews/pathogen-cartoon-poster.png`.
+
+When refreshing image data from PromptFill, convert `zh-tw` to `cn`, keep only the variables used by included templates, preserve preview `imageUrl`/`imageUrls`, and re-run checks for unresolved `{{...}}` placeholders.
+
 ### Purpose-aware suggestion sorting
 
 `PALETTES` (`src/data/palettes.js`) and `FONT_PAIRINGS` (`src/data/fontPairings.js`) each carry a `suitableFor: ['acip', 'teaching', …]` array of `slide_style` ids. `SimpleBriefInput` and `CustomBriefInput` receive the current `slideStyle` prop and sort matching options first, with an orange purpose-match badge. Adding a new deck purpose, palette, or pairing? Don't forget the `suitableFor` field, otherwise it will sort to the bottom for that purpose.
@@ -66,6 +90,8 @@ The chat summary prompt asks NotebookLM to output only two sections: `核心重�
 `src/lib/visualBrief.js` owns both visual prompt shapes: `buildSimpleVisualBriefBlock(brief, language)` renders the selected palette/font pair, and `buildVisualBriefBlock(brief, language)` composes the advanced brief into Markdown bullets. Missing fields are skipped; empty blocks return `''`, which makes the placeholder vanish.
 
 `src/lib/auditChecklist.js` `buildAuditChecklistBlock(value, language)` appends only checked review items. Keep language constraints out of the base template; if the user wants Taiwan Traditional Chinese, they can enable the `taiwan_traditional_chinese` checklist item.
+
+Image prompts use `src/lib/imagePrompt.js`, not `src/lib/render.js`. It renders repeated variables by occurrence count, resolves value priority as `imageSelections[uniqueKey]` → `imageSelections[key]` → template default selection → global image default, then localizes with `cn`/`en`. Missing values deliberately leave the original `{{key}}` visible.
 
 ### Section count vs slide count
 

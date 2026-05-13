@@ -51,6 +51,81 @@ export const IMAGE_CATEGORIES = {
   }
 }
 
+export const PATHOGEN_TRANSMISSION_HINTS = {
+  "狂犬病": { "cn": "傳染途徑視覺提示：以動物咬抓、唾液接觸與防護盾牌作為安全化背景符號，不畫咬傷、傷口或病患。", "en": "Transmission route visual hint: use safe background icons for animal bites/scratches, saliva exposure, and a protection shield; do not show bite wounds, open wounds, or patients." },
+  "鼠疫": { "cn": "傳染途徑視覺提示：以鼠類、跳蚤與少量飛沫符號呈現，避免畫病患、腫大淋巴結或恐怖疫情場景。", "en": "Transmission route visual hint: use rat/rodent, flea, and subtle droplet icons; avoid patients, swollen lymph nodes, or frightening outbreak scenes." },
+  "嚴重急性呼吸道症候群": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、氣流與近距離接觸的抽象圖示呈現，不畫病床、插管或臨床診斷畫面。", "en": "Transmission route visual hint: use abstract respiratory droplets, airflow, and close-contact icons; no hospital beds, intubation, or clinical diagnosis imagery." },
+  "天花": { "cn": "傳染途徑視覺提示：以空氣/飛沫、接觸表面與防護符號呈現，不畫皮疹、膿疱或病患。", "en": "Transmission route visual hint: use airborne/droplet, contact-surface, and protection icons; no rash, pustules, or patients." },
+  "M痘": { "cn": "傳染途徑視覺提示：以近距離接觸、接觸表面與防護符號呈現，不畫皮膚病灶、體液或成人情境。", "en": "Transmission route visual hint: use close-contact, contact-surface, and protection icons; no skin lesions, body fluids, or adult-context imagery." },
+  "登革熱": { "cn": "傳染途徑視覺提示：以蚊子作為主要媒介符號，可放在背景角落或放大鏡旁；不畫叮咬、紅腫或病患。", "en": "Transmission route visual hint: use a mosquito as the main vector symbol, placed in a background corner or near a magnifier; no bites, swelling, or patients." },
+  "屈公病": { "cn": "傳染途徑視覺提示：以蚊子與熱帶環境小圖示呈現，保持可愛乾淨，不畫叮咬或關節疼痛病患。", "en": "Transmission route visual hint: use mosquito and tropical-environment icons, kept cute and clean; no bites or patients with joint pain." },
+  "瘧疾": { "cn": "傳染途徑視覺提示：以瘧蚊/蚊子與夜間或熱帶水域符號呈現，不畫叮咬、發燒病患或血液。", "en": "Transmission route visual hint: use Anopheles/mosquito and nighttime or tropical water icons; no bites, feverish patients, or blood." },
+  "茲卡病毒感染症": { "cn": "傳染途徑視覺提示：以蚊子為主要媒介符號，可加入抽象防護圖示；不畫孕婦、胎兒、叮咬或病患。", "en": "Transmission route visual hint: use mosquito as the main vector icon with abstract protection symbols; no pregnant people, fetuses, bites, or patients." },
+  "西尼羅熱": { "cn": "傳染途徑視覺提示：以蚊子與鳥類剪影作為自然循環符號，不畫病患或神經症狀。", "en": "Transmission route visual hint: use mosquito and bird silhouettes as natural-cycle symbols; no patients or neurological symptoms." },
+  "流行性斑疹傷寒": { "cn": "傳染途徑視覺提示：以體蝨/蝨子與衣物纖維的抽象圖示呈現，不畫皮疹、抓痕或擁擠災難場景。", "en": "Transmission route visual hint: use body-louse and fabric-fiber icons; no rash, scratch marks, or crowded disaster scenes." },
+  "腸道出血性大腸桿菌感染症": { "cn": "傳染途徑視覺提示：以食物、飲水、餐盤與洗手符號呈現，不畫血液、腸道病灶或食物污染操作。", "en": "Transmission route visual hint: use food, water, plate, and handwashing icons; no blood, intestinal lesions, or food-contamination procedure scenes." },
+  "傷寒": { "cn": "傳染途徑視覺提示：以受污染食物/飲水的安全化圖示與水滴呈現，不畫腹瀉病患或髒污環境。", "en": "Transmission route visual hint: use sanitized contaminated-food/water icons and water drops; no diarrhea patients or dirty environments." },
+  "副傷寒": { "cn": "傳染途徑視覺提示：以食物、飲水與洗手圖示呈現糞口傳染概念，不畫病患或廁所場景。", "en": "Transmission route visual hint: use food, water, and handwashing icons to suggest fecal-oral transmission; no patients or restroom scenes." },
+  "桿菌性痢疾": { "cn": "傳染途徑視覺提示：以手部衛生、食物與飲水符號呈現糞口傳染，不畫腸道病灶、血便或病患。", "en": "Transmission route visual hint: use hand hygiene, food, and water icons for fecal-oral transmission; no intestinal lesions, bloody stool, or patients." },
+  "阿米巴性痢疾": { "cn": "傳染途徑視覺提示：以受污染食物/飲水與圓形囊體小圖示呈現，不畫組織破壞、腹痛病患或髒污細節。", "en": "Transmission route visual hint: use contaminated food/water icons plus small round cyst icons; no tissue damage, abdominal-pain patients, or dirty details." },
+  "霍亂": { "cn": "傳染途徑視覺提示：以水滴、飲水容器與食物安全符號呈現，不畫病患、脫水症狀或災難場景。", "en": "Transmission route visual hint: use water drops, drinking-water containers, and food-safety icons; no patients, dehydration symptoms, or disaster scenes." },
+  "急性病毒性A型肝炎": { "cn": "傳染途徑視覺提示：以食物、飲水與洗手圖示呈現糞口傳染，不畫肝臟病灶或病患。", "en": "Transmission route visual hint: use food, water, and handwashing icons for fecal-oral transmission; no liver lesions or patients." },
+  "小兒麻痺症/急性無力肢體麻痺": { "cn": "傳染途徑視覺提示：以手部衛生、飲水與簡化飛沫圖示呈現，不畫兒童、肢體症狀或病患。", "en": "Transmission route visual hint: use hand hygiene, water, and simplified droplet icons; no children, limb symptoms, or patients." },
+  "炭疽病": { "cn": "傳染途徑視覺提示：以動物製品、土壤孢子與防護符號呈現，不畫動物屍體、皮膚潰瘍或實驗操作。", "en": "Transmission route visual hint: use animal-product, soil-spore, and protection icons; no animal carcasses, skin ulcers, or lab procedures." },
+  "多重抗藥性結核病": { "cn": "傳染途徑視覺提示：以空氣傳播、飛沫核與口罩/通風符號呈現，不畫肺部病灶或病患。", "en": "Transmission route visual hint: use airborne transmission, droplet nuclei, and mask/ventilation icons; no lung lesions or patients." },
+  "麻疹": { "cn": "傳染途徑視覺提示：以空氣傳播、飛沫核與高傳染性擴散線條呈現，不畫皮疹或病患。", "en": "Transmission route visual hint: use airborne transmission, droplet nuclei, and high-transmissibility spread lines; no rash or patients." },
+  "德國麻疹": { "cn": "傳染途徑視覺提示：以呼吸道飛沫與柔和防護圖示呈現，不畫孕婦、胎兒、皮疹或病患。", "en": "Transmission route visual hint: use respiratory droplets and soft protection icons; no pregnant people, fetuses, rash, or patients." },
+  "白喉": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、接觸表面與防護符號呈現，不畫喉嚨病灶或病患。", "en": "Transmission route visual hint: use respiratory droplets, contact surfaces, and protection icons; no throat lesions or patients." },
+  "流行性腦脊髓膜炎": { "cn": "傳染途徑視覺提示：以飛沫、鼻咽分泌物的抽象符號與近距離接觸圖示呈現，不畫腦部病變或病患。", "en": "Transmission route visual hint: use droplets, abstract nasopharyngeal-secretion symbols, and close-contact icons; no brain pathology or patients." },
+  "漢他病毒症候群": { "cn": "傳染途徑視覺提示：以鼠類/齧齒類、受污染塵土與排泄物接觸的抽象符號呈現；可畫可愛老鼠剪影，不畫鼠咬、排泄物細節或病患。", "en": "Transmission route visual hint: use rat/rodent, contaminated dust, and abstract excreta-exposure icons; a cute mouse silhouette is allowed, but no bites, excreta details, or patients." },
+  "急性病毒性B型肝炎": { "cn": "傳染途徑視覺提示：以血液/體液、針具安全與親密接觸的抽象符號呈現，不畫血液、針刺、性暗示或病患。", "en": "Transmission route visual hint: use abstract blood/body-fluid, needle-safety, and close-contact icons; no blood, needlestick scenes, sexual imagery, or patients." },
+  "日本腦炎": { "cn": "傳染途徑視覺提示：以蚊子、水田、豬或鳥類剪影作為自然循環符號，不畫腦部病變或病患。", "en": "Transmission route visual hint: use mosquito, rice-field water, pig or bird silhouettes as natural-cycle symbols; no brain pathology or patients." },
+  "急性病毒性C型肝炎": { "cn": "傳染途徑視覺提示：以血液暴露、針具安全與防護盾牌的抽象符號呈現，不畫血液、注射操作或病患。", "en": "Transmission route visual hint: use abstract blood-exposure, needle-safety, and shield icons; no blood, injection procedures, or patients." },
+  "腸病毒感染併發重症": { "cn": "傳染途徑視覺提示：以手部接觸、玩具/表面、飛沫與洗手符號呈現，不畫兒童病患或症狀。", "en": "Transmission route visual hint: use hand contact, toy/surface, droplet, and handwashing icons; no child patients or symptoms." },
+  "急性病毒性D型肝炎": { "cn": "傳染途徑視覺提示：以血液/體液暴露與 B 型肝炎共同感染的抽象連結符號呈現，不畫血液、性暗示或病患。", "en": "Transmission route visual hint: use abstract blood/body-fluid exposure and HBV coinfection-link icons; no blood, sexual imagery, or patients." },
+  "結核病": { "cn": "傳染途徑視覺提示：以空氣傳播、飛沫核與通風符號呈現，不畫肺部病灶、咳血或病患。", "en": "Transmission route visual hint: use airborne transmission, droplet nuclei, and ventilation icons; no lung lesions, coughing blood, or patients." },
+  "先天性德國麻疹症候群": { "cn": "傳染途徑視覺提示：以呼吸道飛沫與抽象垂直傳播/保護符號呈現，不畫孕婦、胎兒、嬰兒或病徵。", "en": "Transmission route visual hint: use respiratory droplets plus abstract vertical-transmission/protection icons; no pregnant people, fetuses, infants, or symptoms." },
+  "急性病毒性E型肝炎": { "cn": "傳染途徑視覺提示：以食物、飲水、肉品安全與洗手符號呈現，不畫肝臟病灶或病患。", "en": "Transmission route visual hint: use food, water, meat-safety, and handwashing icons; no liver lesions or patients." },
+  "流行性腮腺炎": { "cn": "傳染途徑視覺提示：以飛沫、唾液與共享杯具的抽象符號呈現，不畫臉部腫脹或病患。", "en": "Transmission route visual hint: use abstract droplet, saliva, and shared-cup icons; no facial swelling or patients." },
+  "百日咳": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、咳嗽氣流線與防護符號呈現，不畫咳嗽病患或嬰兒。", "en": "Transmission route visual hint: use respiratory droplets, cough airflow lines, and protection icons; no coughing patients or infants." },
+  "侵襲性b型嗜血桿菌感染症": { "cn": "傳染途徑視覺提示：以呼吸道飛沫與近距離接觸符號呈現，不畫侵襲性感染、病患或醫療場景。", "en": "Transmission route visual hint: use respiratory droplets and close-contact icons; no invasive infection, patients, or medical scenes." },
+  "退伍軍人病": { "cn": "傳染途徑視覺提示：以水霧、氣膠、蓮蓬頭或水管的抽象符號呈現，不畫設備拆解、清洗教學或病患。", "en": "Transmission route visual hint: use abstract water mist, aerosols, showerhead, or pipe icons; no equipment disassembly, cleaning tutorials, or patients." },
+  "人類免疫缺乏病毒感染": { "cn": "傳染途徑視覺提示：以血液/體液、親密接觸、母嬰與安全防護的抽象符號呈現，不畫血液、性行為、針具操作或病患。", "en": "Transmission route visual hint: use abstract blood/body-fluid, intimate-contact, parent-child, and protection icons; no blood, sexual activity, needle procedures, or patients." },
+  "梅毒": { "cn": "傳染途徑視覺提示：以親密接觸與母嬰垂直傳播的抽象符號呈現，不畫皮膚病灶、性暗示或病患。", "en": "Transmission route visual hint: use abstract intimate-contact and vertical-transmission icons; no skin lesions, sexual imagery, or patients." },
+  "先天性梅毒": { "cn": "傳染途徑視覺提示：以母嬰垂直傳播與防護盾牌的抽象符號呈現，不畫孕婦、胎兒、嬰兒或病徵。", "en": "Transmission route visual hint: use abstract vertical-transmission and protection-shield icons; no pregnant people, fetuses, infants, or symptoms." },
+  "淋病": { "cn": "傳染途徑視覺提示：以親密接觸與垂直傳播的抽象符號呈現，不畫性暗示、泌尿生殖器或病患。", "en": "Transmission route visual hint: use abstract intimate-contact and vertical-transmission icons; no sexual imagery, urogenital anatomy, or patients." },
+  "破傷風": { "cn": "傳染途徑視覺提示：以土壤孢子、金屬/木刺與防護符號呈現，不畫傷口、釘刺或疼痛病患。", "en": "Transmission route visual hint: use soil-spore, metal/wood splinter, and protection icons; no wounds, puncture scenes, or patients in pain." },
+  "新生兒破傷風": { "cn": "傳染途徑視覺提示：以環境孢子、清潔照護與安全防護符號呈現，不畫新生兒、臍帶、傷口或病患。", "en": "Transmission route visual hint: use environmental spores, clean-care, and safety-protection icons; no newborns, umbilical cord, wounds, or patients." },
+  "漢生病": { "cn": "傳染途徑視覺提示：以長期近距離接觸與呼吸道飛沫的柔和符號呈現，不畫皮膚或神經病變。", "en": "Transmission route visual hint: use gentle icons for prolonged close contact and respiratory droplets; no skin or nerve pathology." },
+  "急性病毒性肝炎未定型": { "cn": "傳染途徑視覺提示：以食物/飲水、血液/體液與洗手防護的代表性群像呈現，避免暗示單一傳染途徑或單一病原。", "en": "Transmission route visual hint: use a representative group of food/water, blood/body-fluid, and handwashing-protection icons; avoid implying one route or one pathogen." },
+  "新冠併發重症": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、氣膠、口罩與通風符號呈現，不畫重症病患、病床或醫療器材。", "en": "Transmission route visual hint: use respiratory droplets, aerosols, mask, and ventilation icons; no severe patients, hospital beds, or medical devices." },
+  "李斯特菌症": { "cn": "傳染途徑視覺提示：以食物安全、冷藏食品與餐盤符號呈現，不畫污染操作、病患或孕婦。", "en": "Transmission route visual hint: use food-safety, refrigerated-food, and plate icons; no contamination procedures, patients, or pregnant people." },
+  "水痘併發症": { "cn": "傳染途徑視覺提示：以空氣/飛沫、接觸表面與防護符號呈現，不畫水疱、皮疹或病患。", "en": "Transmission route visual hint: use airborne/droplet, contact-surface, and protection icons; no blisters, rash, or patients." },
+  "恙蟲病": { "cn": "傳染途徑視覺提示：以恙蟎/蟎蟲、草地與戶外防護符號呈現，不畫叮咬、焦痂或病患。", "en": "Transmission route visual hint: use chigger/mite, grassland, and outdoor-protection icons; no bites, eschar, or patients." },
+  "地方性斑疹傷寒": { "cn": "傳染途徑視覺提示：以鼠類、跳蚤與城市角落的抽象符號呈現，不畫皮疹、鼠咬或髒污場景。", "en": "Transmission route visual hint: use rat/rodent, flea, and abstract urban-corner icons; no rash, rodent bites, or dirty scenes." },
+  "發熱伴血小板減少綜合症": { "cn": "傳染途徑視覺提示：以蜱蟲、草地與戶外防護符號呈現，不畫叮咬、血液或病患。", "en": "Transmission route visual hint: use tick, grassland, and outdoor-protection icons; no bites, blood, or patients." },
+  "萊姆病": { "cn": "傳染途徑視覺提示：以蜱蟲、森林草地與戶外防護符號呈現，不畫叮咬、紅斑或病患。", "en": "Transmission route visual hint: use tick, forest/grassland, and outdoor-protection icons; no bites, erythema, or patients." },
+  "肉毒桿菌中毒": { "cn": "傳染途徑視覺提示：以食物安全、罐頭、毒素水滴與防護符號呈現，不畫製備教學、培養操作或中毒病患。", "en": "Transmission route visual hint: use food-safety, canned-food, toxin-drop, and protection icons; no preparation tutorials, culture procedures, or poisoned patients." },
+  "庫賈氏病": { "cn": "傳染途徑視覺提示：以抽象錯摺蛋白與安全警示符號呈現，避免暗示日常接觸傳染，不畫腦部病變或醫療器械。", "en": "Transmission route visual hint: use abstract misfolded-protein and safety-warning icons; avoid implying casual contact transmission, and do not show brain pathology or medical instruments." },
+  "弓形蟲感染症": { "cn": "傳染途徑視覺提示：以貓科動物足跡、土壤、食物安全與圓形囊體符號呈現，不畫孕婦、胎兒、眼部病變或糞便細節。", "en": "Transmission route visual hint: use cat-paw, soil, food-safety, and round-cyst icons; no pregnant people, fetuses, eye pathology, or feces details." },
+  "布氏桿菌病": { "cn": "傳染途徑視覺提示：以乳製品安全、家畜剪影與防護符號呈現，不畫動物分娩、流產或病患。", "en": "Transmission route visual hint: use dairy-safety, livestock-silhouette, and protection icons; no animal birth, miscarriage, or patients." },
+  "流感併發重症": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、氣膠與口罩符號呈現，不畫重症病患或醫院場景。", "en": "Transmission route visual hint: use respiratory droplets, aerosols, and mask icons; no severe patients or hospital scenes." },
+  "侵襲性肺炎鏈球菌感染症": { "cn": "傳染途徑視覺提示：以呼吸道飛沫與近距離接觸符號呈現，不畫肺部病灶、血液或病患。", "en": "Transmission route visual hint: use respiratory droplets and close-contact icons; no lung lesions, blood, or patients." },
+  "Q熱": { "cn": "傳染途徑視覺提示：以農場粉塵、氣膠、羊牛剪影與防護符號呈現，不畫動物分娩、污染物或病患。", "en": "Transmission route visual hint: use farm-dust, aerosol, sheep/cattle silhouette, and protection icons; no animal birth, contaminants, or patients." },
+  "類鼻疽": { "cn": "傳染途徑視覺提示：以土壤、水滴、雨季與防護靴手套符號呈現，不畫傷口、膿瘍或病患。", "en": "Transmission route visual hint: use soil, water drops, rainy-season, and protective boot/glove icons; no wounds, abscesses, or patients." },
+  "鉤端螺旋體病": { "cn": "傳染途徑視覺提示：以受污染水源、泥土、鼠類足跡與防護靴符號呈現，不畫尿液細節、黃疸或病患。", "en": "Transmission route visual hint: use contaminated-water, mud, rodent-track, and protective-boot icons; no urine details, jaundice, or patients." },
+  "兔熱病": { "cn": "傳染途徑視覺提示：以蜱蟲、鹿蠅、野生動物剪影與戶外防護符號呈現，不畫動物死亡、狩獵或病患。", "en": "Transmission route visual hint: use tick, deer-fly, wildlife silhouette, and outdoor-protection icons; no dead animals, hunting, or patients." },
+  "疱疹B病毒感染症": { "cn": "傳染途徑視覺提示：以猴子剪影、接觸防護與實驗/動物照護安全符號呈現，不畫咬抓傷、神經病變或病患。", "en": "Transmission route visual hint: use monkey silhouette, contact-protection, and lab/animal-care safety icons; no bite/scratch wounds, nerve pathology, or patients." },
+  "新型A型流感": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、氣膠、鳥類或豬的抽象剪影呈現，不畫養殖場疫情或病患。", "en": "Transmission route visual hint: use respiratory droplets, aerosols, and abstract bird or pig silhouettes; no farm-outbreak scenes or patients." },
+  "黃熱病": { "cn": "傳染途徑視覺提示：以蚊子與熱帶植物符號呈現，不畫叮咬、黃疸病患或出血。", "en": "Transmission route visual hint: use mosquito and tropical-plant icons; no bites, jaundiced patients, or bleeding." },
+  "裂谷熱": { "cn": "傳染途徑視覺提示：以蚊子、家畜剪影與草原水域符號呈現，不畫動物死亡、出血或病患。", "en": "Transmission route visual hint: use mosquito, livestock silhouette, and savanna/water icons; no animal deaths, bleeding, or patients." },
+  "中東呼吸症候群冠狀病毒感染症": { "cn": "傳染途徑視覺提示：以呼吸道飛沫、駱駝剪影與防護符號呈現，不畫病患、醫院或駱駝接觸細節。", "en": "Transmission route visual hint: use respiratory droplets, camel silhouette, and protection icons; no patients, hospitals, or camel-contact details." },
+  "拉薩熱": { "cn": "傳染途徑視覺提示：以鼠類、受污染塵土/食物與接觸防護符號呈現，不畫出血、排泄物細節或病患。", "en": "Transmission route visual hint: use rodent, contaminated dust/food, and contact-protection icons; no bleeding, excreta details, or patients." },
+  "馬堡病毒出血熱": { "cn": "傳染途徑視覺提示：以蝙蝠剪影、洞穴/森林與接觸防護符號呈現，不畫出血、病患、屍體或體液。", "en": "Transmission route visual hint: use bat silhouette, cave/forest, and contact-protection icons; no bleeding, patients, corpses, or body fluids." },
+  "伊波拉病毒感染": { "cn": "傳染途徑視覺提示：以蝙蝠/野生動物剪影與接觸防護符號呈現，不畫出血、病患、屍體或體液。", "en": "Transmission route visual hint: use bat/wildlife silhouettes and contact-protection icons; no bleeding, patients, corpses, or body fluids." },
+  "立百病毒感染症": { "cn": "傳染途徑視覺提示：以蝙蝠、果實、豬剪影與呼吸道/接觸防護符號呈現，不畫病患或病死動物。", "en": "Transmission route visual hint: use bat, fruit, pig silhouette, and respiratory/contact-protection icons; no patients or sick/dead animals." }
+}
+
 export const IMAGE_BANKS = {
   "action_pose": {
     "label": {
@@ -1732,6 +1807,205 @@ export const IMAGE_BANKS = {
         "en": "Christmas gingerbread house"
       }
     ]
+  },
+  "pathogen_disease": {
+    "label": {
+      "cn": "法定傳染病",
+      "en": "Notifiable Disease"
+    },
+    "category": "other",
+    "options": [
+      { "label": { "cn": "狂犬病", "en": "Rabies" }, "prompt": { "cn": "第一類法定傳染病：狂犬病。代表病原體為狂犬病病毒，畫成子彈形包膜病毒，表面有柔和糖蛋白刺突；卡通化、無病患、無咬傷。", "en": "Category I notifiable disease: Rabies. Represent Rabies virus as a bullet-shaped enveloped virion with soft glycoprotein spikes; cartoon style, no patients or bite wounds." } },
+      { "label": { "cn": "鼠疫", "en": "Plague" }, "prompt": { "cn": "第一類法定傳染病：鼠疫。代表病原體為鼠疫桿菌，畫成圓短桿菌，帶有安全別針樣雙極染色感的卡通特徵；不畫病患或病灶。", "en": "Category I notifiable disease: Plague. Represent Yersinia pestis as short rounded rods with a cartoon hint of bipolar safety-pin staining; no patients or lesions." } },
+      { "label": { "cn": "嚴重急性呼吸道症候群", "en": "Severe acute respiratory syndrome" }, "prompt": { "cn": "第一類法定傳染病：嚴重急性呼吸道症候群。代表病原體為 SARS 冠狀病毒，畫成有冠狀刺突的圓形包膜病毒；非恐怖、非臨床診斷畫面。", "en": "Category I notifiable disease: Severe acute respiratory syndrome. Represent SARS coronavirus as a round enveloped virion with crown-like spikes; non-horror, no clinical diagnosis scene." } },
+      { "label": { "cn": "天花", "en": "Smallpox" }, "prompt": { "cn": "第一類法定傳染病：天花。代表病原體為天花病毒，畫成磚塊狀或橢圓形痘病毒，表面有柔和紋理；不畫皮疹或病患。", "en": "Category I notifiable disease: Smallpox. Represent Variola virus as a brick-like or oval poxvirus with soft surface texture; no rash or patients." } },
+
+      { "label": { "cn": "M痘", "en": "Mpox" }, "prompt": { "cn": "第二類法定傳染病：M痘。代表病原體為猴痘病毒，畫成橢圓形痘病毒，有圓潤外殼與卡通核心紋理；不畫皮膚病灶。", "en": "Category II notifiable disease: Mpox. Represent Monkeypox virus as an oval poxvirus with a rounded shell and cartoon core texture; no skin lesions." } },
+      { "label": { "cn": "登革熱", "en": "Dengue fever" }, "prompt": { "cn": "第二類法定傳染病：登革熱。代表病原體為登革病毒，畫成圓形包膜病毒，表面有規律蛋白顆粒與柔和刺突。", "en": "Category II notifiable disease: Dengue fever. Represent Dengue virus as a round enveloped virion with orderly surface proteins and soft spikes." } },
+      { "label": { "cn": "屈公病", "en": "Chikungunya fever" }, "prompt": { "cn": "第二類法定傳染病：屈公病。代表病原體為屈公病毒，畫成小型圓形包膜病毒，帶有規則刺突與熱帶色彩元素；不畫關節疼痛或病患。", "en": "Category II notifiable disease: Chikungunya fever. Represent Chikungunya virus as a small round enveloped virion with orderly spikes and tropical color accents; no joint-pain or patient imagery." } },
+      { "label": { "cn": "瘧疾", "en": "Malaria" }, "prompt": { "cn": "第二類法定傳染病：瘧疾。代表病原體為瘧原蟲，畫成紅血球外的可愛原蟲形象或蚊媒旁的抽象寄生蟲符號；不畫血液或病患。", "en": "Category II notifiable disease: Malaria. Represent Plasmodium as a cute protozoan form outside red blood cells or an abstract parasite symbol near a mosquito vector; no blood or patients." } },
+      { "label": { "cn": "茲卡病毒感染症", "en": "Zika virus infection" }, "prompt": { "cn": "第二類法定傳染病：茲卡病毒感染症。代表病原體為茲卡病毒，畫成小型圓形黃病毒，表面有細緻蛋白顆粒；可加入抽象蚊媒圖示但無叮咬。", "en": "Category II notifiable disease: Zika virus infection. Represent Zika virus as a small round flavivirus with delicate protein particles; an abstract mosquito-vector icon may appear, with no bite scene." } },
+      { "label": { "cn": "西尼羅熱", "en": "West Nile fever" }, "prompt": { "cn": "第二類法定傳染病：西尼羅熱。代表病原體為西尼羅病毒，畫成圓形黃病毒，使用金黃與藍色科普配色；可有蚊媒小圖示但不畫病患。", "en": "Category II notifiable disease: West Nile fever. Represent West Nile virus as a round flavivirus using a gold-and-blue educational palette; a small mosquito-vector icon may appear, no patients." } },
+      { "label": { "cn": "流行性斑疹傷寒", "en": "Epidemic typhus" }, "prompt": { "cn": "第二類法定傳染病：流行性斑疹傷寒。代表病原體為普氏立克次體，畫成小型細胞內桿狀病原體群，搭配乾淨點狀背景；不畫皮疹或病患。", "en": "Category II notifiable disease: Epidemic typhus. Represent Rickettsia prowazekii as a group of tiny intracellular rod-like pathogens with a clean dotted background; no rash or patients." } },
+      { "label": { "cn": "腸道出血性大腸桿菌感染症", "en": "Enterohemorrhagic E. coli infection" }, "prompt": { "cn": "第二類法定傳染病：腸道出血性大腸桿菌感染症。代表病原體為 EHEC 大腸桿菌，畫成帶菌毛與鞭毛的圓潤桿菌；不畫血液或腸道病灶。", "en": "Category II notifiable disease: Enterohemorrhagic E. coli infection. Represent EHEC as rounded E. coli rods with fimbriae and flagella; no blood or intestinal lesions." } },
+      { "label": { "cn": "傷寒", "en": "Typhoid fever" }, "prompt": { "cn": "第二類法定傳染病：傷寒。代表病原體為傷寒沙門氏菌，畫成有多根鞭毛的活潑桿菌角色；避免食物中毒場景或病患畫面。", "en": "Category II notifiable disease: Typhoid fever. Represent Salmonella Typhi as a lively rod-shaped character with multiple flagella; avoid food-poisoning scenes or patient imagery." } },
+      { "label": { "cn": "副傷寒", "en": "Paratyphoid fever" }, "prompt": { "cn": "第二類法定傳染病：副傷寒。代表病原體為副傷寒沙門氏菌，畫成有鞭毛的圓潤桿菌，與傷寒風格相近但色彩可略有差異。", "en": "Category II notifiable disease: Paratyphoid fever. Represent Salmonella Paratyphi as a rounded flagellated rod, visually related to typhoid but with a slightly distinct palette." } },
+      { "label": { "cn": "桿菌性痢疾", "en": "Bacillary dysentery" }, "prompt": { "cn": "第二類法定傳染病：桿菌性痢疾。代表病原體為志賀氏菌，畫成短小桿菌群，乾淨明確、非血腥、無腸道病灶。", "en": "Category II notifiable disease: Bacillary dysentery. Represent Shigella as groups of short rods, clean and clear, non-gory, with no intestinal lesions." } },
+      { "label": { "cn": "阿米巴性痢疾", "en": "Amebic dysentery" }, "prompt": { "cn": "第二類法定傳染病：阿米巴性痢疾。代表病原體為溶組織內阿米巴，畫成變形柔軟的阿米巴原蟲與圓形囊體角色；不畫組織破壞。", "en": "Category II notifiable disease: Amebic dysentery. Represent Entamoeba histolytica as a soft shape-shifting amoeba plus round cyst character; no tissue destruction." } },
+      { "label": { "cn": "霍亂", "en": "Cholera" }, "prompt": { "cn": "第二類法定傳染病：霍亂。代表病原體為霍亂弧菌，畫成逗號狀彎曲桿菌，帶單根鞭毛與水滴式科普背景；不畫病患。", "en": "Category II notifiable disease: Cholera. Represent Vibrio cholerae as comma-shaped curved rods with a single flagellum and a water-drop educational backdrop; no patients." } },
+      { "label": { "cn": "急性病毒性A型肝炎", "en": "Acute hepatitis A" }, "prompt": { "cn": "第二類法定傳染病：急性病毒性A型肝炎。代表病原體為 A 型肝炎病毒，畫成小型二十面體病毒粒子，乾淨、友善、科普插畫感。", "en": "Category II notifiable disease: Acute hepatitis A. Represent Hepatitis A virus as a small icosahedral virion, clean, friendly, and educational." } },
+      { "label": { "cn": "小兒麻痺症/急性無力肢體麻痺", "en": "Poliomyelitis / acute flaccid paralysis" }, "prompt": { "cn": "第二類法定傳染病：小兒麻痺症/急性無力肢體麻痺。代表病原體為小兒麻痺病毒，畫成小型二十面體腸病毒；不畫兒童或肢體症狀。", "en": "Category II notifiable disease: Poliomyelitis / acute flaccid paralysis. Represent Poliovirus as a small icosahedral enterovirus; do not depict children or limb symptoms." } },
+      { "label": { "cn": "炭疽病", "en": "Anthrax" }, "prompt": { "cn": "第二類法定傳染病：炭疽病。代表病原體為炭疽桿菌，畫成串鏈狀方正桿菌與孢子造型；不畫皮膚潰瘍或動物屍體。", "en": "Category II notifiable disease: Anthrax. Represent Bacillus anthracis as chains of boxy rods with spore shapes; no skin ulcers or animal carcasses." } },
+      { "label": { "cn": "多重抗藥性結核病", "en": "Multidrug-resistant tuberculosis" }, "prompt": { "cn": "第二類法定傳染病：多重抗藥性結核病。代表病原體為結核分枝桿菌，畫成細長微彎桿菌，搭配抽象抗藥性盾牌符號；不畫肺部病灶。", "en": "Category II notifiable disease: Multidrug-resistant tuberculosis. Represent Mycobacterium tuberculosis as slender slightly curved rods with abstract resistance-shield symbols; no lung lesions." } },
+      { "label": { "cn": "麻疹", "en": "Measles" }, "prompt": { "cn": "第二類法定傳染病：麻疹。代表病原體為麻疹病毒，畫成圓形包膜副黏液病毒，有柔和刺突與可愛表情；不畫皮疹。", "en": "Category II notifiable disease: Measles. Represent Measles virus as a round enveloped paramyxovirus with soft spikes and a cute expression; no rash." } },
+      { "label": { "cn": "德國麻疹", "en": "Rubella" }, "prompt": { "cn": "第二類法定傳染病：德國麻疹。代表病原體為德國麻疹病毒，畫成小型圓形病毒，使用粉紅與紫色科普配色；不畫皮疹或病患。", "en": "Category II notifiable disease: Rubella. Represent Rubella virus as a small round virion with a pink-and-purple educational palette; no rash or patients." } },
+      { "label": { "cn": "白喉", "en": "Diphtheria" }, "prompt": { "cn": "第二類法定傳染病：白喉。代表病原體為白喉桿菌，畫成棒狀、略呈 V 字排列的桿菌角色；不畫喉嚨病灶。", "en": "Category II notifiable disease: Diphtheria. Represent Corynebacterium diphtheriae as club-shaped rod characters arranged in slight V shapes; no throat lesions." } },
+      { "label": { "cn": "流行性腦脊髓膜炎", "en": "Meningococcal meningitis" }, "prompt": { "cn": "第二類法定傳染病：流行性腦脊髓膜炎。代表病原體為腦膜炎雙球菌，畫成成對咖啡豆狀雙球菌，有圓潤莢膜；不畫腦部病變。", "en": "Category II notifiable disease: Meningococcal meningitis. Represent Neisseria meningitidis as paired coffee-bean-like diplococci with rounded capsules; no brain pathology." } },
+      { "label": { "cn": "漢他病毒症候群", "en": "Hantavirus syndrome" }, "prompt": { "cn": "第二類法定傳染病：漢他病毒症候群。代表病原體為漢他病毒，畫成圓形包膜病毒與分節 RNA 的抽象線條；不畫鼠咬或病患。", "en": "Category II notifiable disease: Hantavirus syndrome. Represent Hantavirus as a round enveloped virion with abstract segmented-RNA lines; no rodent bites or patients." } },
+
+      { "label": { "cn": "急性病毒性B型肝炎", "en": "Acute hepatitis B" }, "prompt": { "cn": "第三類法定傳染病：急性病毒性B型肝炎。代表病原體為 B 型肝炎病毒，畫成 Dane particle 大圓粒子與小球狀表面抗原群；科普卡通化。", "en": "Category III notifiable disease: Acute hepatitis B. Represent Hepatitis B virus with a large Dane particle plus small spherical surface-antigen particles; educational cartoon style." } },
+      { "label": { "cn": "日本腦炎", "en": "Japanese encephalitis" }, "prompt": { "cn": "第三類法定傳染病：日本腦炎。代表病原體為日本腦炎病毒，畫成圓形黃病毒，搭配柔和蚊媒符號與東亞科普色彩；不畫腦部病變。", "en": "Category III notifiable disease: Japanese encephalitis. Represent Japanese encephalitis virus as a round flavivirus with a soft mosquito-vector symbol and East Asian educational palette; no brain pathology." } },
+      { "label": { "cn": "急性病毒性C型肝炎", "en": "Acute hepatitis C" }, "prompt": { "cn": "第三類法定傳染病：急性病毒性C型肝炎。代表病原體為 C 型肝炎病毒，畫成圓形包膜病毒，表面蛋白細緻且色彩溫和；無肝臟病灶。", "en": "Category III notifiable disease: Acute hepatitis C. Represent Hepatitis C virus as a round enveloped virion with delicate surface proteins and soft colors; no liver lesions." } },
+      { "label": { "cn": "腸病毒感染併發重症", "en": "Severe enterovirus infection" }, "prompt": { "cn": "第三類法定傳染病：腸病毒感染併發重症。代表病原體為腸病毒群，畫成多個小型二十面體病毒角色；群像表現，不指定單一病毒。", "en": "Category III notifiable disease: Severe enterovirus infection. Represent an enterovirus group as multiple small icosahedral virus characters; group depiction, not a single-virus claim." } },
+      { "label": { "cn": "急性病毒性D型肝炎", "en": "Acute hepatitis D" }, "prompt": { "cn": "第三類法定傳染病：急性病毒性D型肝炎。代表病原體為 D 型肝炎病毒，畫成依附 B 型肝炎表面抗原的小型衛星病毒；科普化但不複雜。", "en": "Category III notifiable disease: Acute hepatitis D. Represent Hepatitis D virus as a small satellite-like virus associated with HBV surface antigen; educational but not overly complex." } },
+      { "label": { "cn": "結核病", "en": "Tuberculosis" }, "prompt": { "cn": "第三類法定傳染病：結核病。代表病原體為結核分枝桿菌，畫成細長微彎桿菌群，有蠟質外層的卡通質感；不畫肺部病灶。", "en": "Category III notifiable disease: Tuberculosis. Represent Mycobacterium tuberculosis as slender slightly curved rods with a waxy cartoon surface; no lung lesions." } },
+      { "label": { "cn": "先天性德國麻疹症候群", "en": "Congenital rubella syndrome" }, "prompt": { "cn": "第三類法定傳染病：先天性德國麻疹症候群。代表病原體為德國麻疹病毒，畫成溫和圓形病毒與抽象保護符號；不畫胎兒、嬰兒或病徵。", "en": "Category III notifiable disease: Congenital rubella syndrome. Represent Rubella virus as a gentle round virion with abstract protection symbols; no fetus, infant, or symptoms." } },
+      { "label": { "cn": "急性病毒性E型肝炎", "en": "Acute hepatitis E" }, "prompt": { "cn": "第三類法定傳染病：急性病毒性E型肝炎。代表病原體為 E 型肝炎病毒，畫成非包膜二十面體病毒粒子，乾淨科普插畫風。", "en": "Category III notifiable disease: Acute hepatitis E. Represent Hepatitis E virus as a non-enveloped icosahedral virion in a clean educational illustration style." } },
+      { "label": { "cn": "流行性腮腺炎", "en": "Mumps" }, "prompt": { "cn": "第三類法定傳染病：流行性腮腺炎。代表病原體為腮腺炎病毒，畫成圓形包膜副黏液病毒，有柔和刺突與親切表情；不畫臉部腫脹。", "en": "Category III notifiable disease: Mumps. Represent Mumps virus as a round enveloped paramyxovirus with soft spikes and a friendly expression; no facial swelling." } },
+      { "label": { "cn": "百日咳", "en": "Pertussis" }, "prompt": { "cn": "第三類法定傳染病：百日咳。代表病原體為百日咳桿菌，畫成小型短桿菌或球桿菌角色，帶有纖毛黏附感；不畫咳嗽病患。", "en": "Category III notifiable disease: Pertussis. Represent Bordetella pertussis as small short rod/coccobacillus characters with a hint of adherence fibers; no coughing patients." } },
+      { "label": { "cn": "侵襲性b型嗜血桿菌感染症", "en": "Invasive Haemophilus influenzae type b infection" }, "prompt": { "cn": "第三類法定傳染病：侵襲性b型嗜血桿菌感染症。代表病原體為 Hib，畫成小型桿菌並突出圓潤莢膜；不畫侵襲性感染場景。", "en": "Category III notifiable disease: Invasive Haemophilus influenzae type b infection. Represent Hib as small rods with a rounded capsule; no invasive infection scene." } },
+      { "label": { "cn": "退伍軍人病", "en": "Legionnaires' disease" }, "prompt": { "cn": "第三類法定傳染病：退伍軍人病。代表病原體為退伍軍人桿菌，畫成細長桿菌角色，背景可有抽象水滴與管線符號；不畫設備操作。", "en": "Category III notifiable disease: Legionnaires' disease. Represent Legionella pneumophila as slender rod characters with abstract water-drop and pipe symbols; no equipment-operation steps." } },
+      { "label": { "cn": "人類免疫缺乏病毒感染", "en": "HIV infection" }, "prompt": { "cn": "第三類法定傳染病：人類免疫缺乏病毒感染。代表病原體為 HIV，畫成圓形包膜病毒，內部有錐形衣殼的可愛剖面暗示；不畫病患。", "en": "Category III notifiable disease: HIV infection. Represent HIV as a round enveloped virion with a cute implied conical capsid inside; no patients." } },
+      { "label": { "cn": "梅毒", "en": "Syphilis" }, "prompt": { "cn": "第三類法定傳染病：梅毒。代表病原體為梅毒螺旋體，畫成細長螺旋狀病原體角色，有柔和螺旋線條；不畫皮膚或性接觸情境。", "en": "Category III notifiable disease: Syphilis. Represent Treponema pallidum as a slender spiral pathogen character with soft helix lines; no skin lesions or sexual context." } },
+      { "label": { "cn": "先天性梅毒", "en": "Congenital syphilis" }, "prompt": { "cn": "第三類法定傳染病：先天性梅毒。代表病原體為梅毒螺旋體，畫成溫和螺旋狀角色與抽象保護符號；不畫胎兒、嬰兒或病徵。", "en": "Category III notifiable disease: Congenital syphilis. Represent Treponema pallidum as a gentle spiral character with abstract protection symbols; no fetus, infant, or symptoms." } },
+      { "label": { "cn": "淋病", "en": "Gonorrhea" }, "prompt": { "cn": "第三類法定傳染病：淋病。代表病原體為淋病雙球菌，畫成成對咖啡豆狀雙球菌角色；不畫泌尿生殖器或病患情境。", "en": "Category III notifiable disease: Gonorrhea. Represent Neisseria gonorrhoeae as paired coffee-bean-like diplococcus characters; no urogenital or patient scenes." } },
+      { "label": { "cn": "破傷風", "en": "Tetanus" }, "prompt": { "cn": "第三類法定傳染病：破傷風。代表病原體為破傷風梭菌，畫成鼓槌狀帶端孢子的桿菌角色；不畫傷口或疼痛表情。", "en": "Category III notifiable disease: Tetanus. Represent Clostridium tetani as drumstick-shaped rods with terminal spores; no wounds or painful expressions." } },
+      { "label": { "cn": "新生兒破傷風", "en": "Neonatal tetanus" }, "prompt": { "cn": "第三類法定傳染病：新生兒破傷風。代表病原體為破傷風梭菌，畫成鼓槌狀孢子桿菌與柔和保護符號；不畫新生兒或症狀。", "en": "Category III notifiable disease: Neonatal tetanus. Represent Clostridium tetani as drumstick-shaped spore-forming rods with soft protection symbols; no newborns or symptoms." } },
+      { "label": { "cn": "漢生病", "en": "Hansen's disease" }, "prompt": { "cn": "第三類法定傳染病：漢生病。代表病原體為麻風分枝桿菌，畫成細長桿菌群，有溫和科普圖鑑感；不畫皮膚或神經病變。", "en": "Category III notifiable disease: Hansen's disease. Represent Mycobacterium leprae as groups of slender rods with a gentle educational atlas feel; no skin or nerve pathology." } },
+      { "label": { "cn": "急性病毒性肝炎未定型", "en": "Acute viral hepatitis, unspecified" }, "prompt": { "cn": "第三類法定傳染病：急性病毒性肝炎未定型。此項不指定單一病毒，畫成 A、B、C、D、E 型肝炎病毒的代表性卡通群像；避免暗示單一病原。", "en": "Category III notifiable disease: Acute viral hepatitis, unspecified. Do not assign a single virus; depict a representative cartoon group of hepatitis A, B, C, D, and E viruses; avoid implying one cause." } },
+
+      { "label": { "cn": "新冠併發重症", "en": "Severe COVID-19 complications" }, "prompt": { "cn": "第四類法定傳染病：新冠併發重症。代表病原體為 SARS-CoV-2，畫成有冠狀刺突的圓形包膜病毒角色；不畫重症病患或醫療器材。", "en": "Category IV notifiable disease: Severe COVID-19 complications. Represent SARS-CoV-2 as a round enveloped coronavirus character with crown-like spikes; no severe patients or medical equipment." } },
+      { "label": { "cn": "李斯特菌症", "en": "Listeriosis" }, "prompt": { "cn": "第四類法定傳染病：李斯特菌症。代表病原體為李斯特菌，畫成短桿菌角色，帶有輕微翻滾運動線與鞭毛暗示；不畫食品污染場景。", "en": "Category IV notifiable disease: Listeriosis. Represent Listeria monocytogenes as short rod characters with subtle tumbling-motion lines and flagella hints; no food-contamination scene." } },
+      { "label": { "cn": "水痘併發症", "en": "Varicella complications" }, "prompt": { "cn": "第四類法定傳染病：水痘併發症。代表病原體為水痘帶狀疱疹病毒，畫成圓形疱疹病毒，有包膜與二十面體核心暗示；不畫皮疹。", "en": "Category IV notifiable disease: Varicella complications. Represent Varicella-zoster virus as a round herpesvirus with envelope and implied icosahedral core; no rash." } },
+      { "label": { "cn": "恙蟲病", "en": "Scrub typhus" }, "prompt": { "cn": "第四類法定傳染病：恙蟲病。代表病原體為恙蟲病東方體，畫成小型立克次體樣病原體群，可有簡化恙蟎符號；不畫叮咬或焦痂。", "en": "Category IV notifiable disease: Scrub typhus. Represent Orientia tsutsugamushi as tiny rickettsia-like pathogens with an optional simplified mite icon; no bite or eschar." } },
+      { "label": { "cn": "地方性斑疹傷寒", "en": "Endemic typhus" }, "prompt": { "cn": "第四類法定傳染病：地方性斑疹傷寒。代表病原體為斑疹傷寒立克次體，畫成小型細胞內桿狀病原體群；不畫皮疹或病患。", "en": "Category IV notifiable disease: Endemic typhus. Represent Rickettsia typhi as tiny intracellular rod-like pathogen groups; no rash or patients." } },
+      { "label": { "cn": "發熱伴血小板減少綜合症", "en": "Severe fever with thrombocytopenia syndrome" }, "prompt": { "cn": "第四類法定傳染病：發熱伴血小板減少綜合症。代表病原體為 SFTS 病毒，畫成圓形包膜病毒與分節 RNA 線條；不畫血液或血小板醫療圖。", "en": "Category IV notifiable disease: Severe fever with thrombocytopenia syndrome. Represent SFTS virus as a round enveloped virion with segmented-RNA lines; no blood or clinical platelet graphics." } },
+      { "label": { "cn": "萊姆病", "en": "Lyme disease" }, "prompt": { "cn": "第四類法定傳染病：萊姆病。代表病原體為伯氏疏螺旋體，畫成細長波浪螺旋菌，可有小型蜱媒符號；不畫叮咬或紅斑。", "en": "Category IV notifiable disease: Lyme disease. Represent Borrelia burgdorferi as slender wavy spirochetes with an optional small tick-vector icon; no bites or erythema." } },
+      { "label": { "cn": "肉毒桿菌中毒", "en": "Botulism" }, "prompt": { "cn": "第四類法定傳染病：肉毒桿菌中毒。代表病原體/毒素為肉毒桿菌與肉毒毒素，畫成孢子形成桿菌與抽象安全毒素滴符號；不畫製備、培養或中毒病患。", "en": "Category IV notifiable disease: Botulism. Represent Clostridium botulinum and botulinum toxin as spore-forming rods plus an abstract safety toxin-drop symbol; no preparation, culture, or poisoned patients." } },
+      { "label": { "cn": "庫賈氏病", "en": "Creutzfeldt-Jakob disease" }, "prompt": { "cn": "第四類法定傳染病：庫賈氏病。代表病原因子為普利昂，畫成抽象錯摺蛋白 ribbon 角色與乾淨分子背景；不畫腦部病變。", "en": "Category IV notifiable disease: Creutzfeldt-Jakob disease. Represent prions as abstract misfolded protein-ribbon characters with a clean molecular backdrop; no brain pathology." } },
+      { "label": { "cn": "弓形蟲感染症", "en": "Toxoplasmosis" }, "prompt": { "cn": "第四類法定傳染病：弓形蟲感染症。代表病原體為弓形蟲，畫成新月形速殖子與圓形囊體的可愛群像；不畫孕婦、胎兒或眼部病變。", "en": "Category IV notifiable disease: Toxoplasmosis. Represent Toxoplasma gondii as cute crescent-shaped tachyzoites plus round cyst forms; no pregnant people, fetuses, or eye pathology." } },
+      { "label": { "cn": "布氏桿菌病", "en": "Brucellosis" }, "prompt": { "cn": "第四類法定傳染病：布氏桿菌病。代表病原體為布氏桿菌，畫成小型球桿菌群，乾淨科普角色設計；不畫牲畜或流產情境。", "en": "Category IV notifiable disease: Brucellosis. Represent Brucella as groups of tiny coccobacilli in a clean educational character style; no livestock or miscarriage scenes." } },
+      { "label": { "cn": "流感併發重症", "en": "Severe influenza complications" }, "prompt": { "cn": "第四類法定傳染病：流感併發重症。代表病原體為流感病毒，畫成圓形或橢圓形病毒，表面有 HA/NA 刺突；不畫重症病患。", "en": "Category IV notifiable disease: Severe influenza complications. Represent Influenza virus as a round or oval virion with HA/NA spikes; no severe patients." } },
+      { "label": { "cn": "侵襲性肺炎鏈球菌感染症", "en": "Invasive pneumococcal disease" }, "prompt": { "cn": "第四類法定傳染病：侵襲性肺炎鏈球菌感染症。代表病原體為肺炎鏈球菌，畫成帶莢膜的矛尖狀雙球菌；不畫肺部或血液感染。", "en": "Category IV notifiable disease: Invasive pneumococcal disease. Represent Streptococcus pneumoniae as lancet-shaped diplococci with capsules; no lung or bloodstream infection imagery." } },
+      { "label": { "cn": "Q熱", "en": "Q fever" }, "prompt": { "cn": "第四類法定傳染病：Q熱。代表病原體為伯納特氏柯克斯體，畫成小型球桿菌樣病原體群，搭配乾淨細胞內科普背景；不畫動物分娩或環境污染。", "en": "Category IV notifiable disease: Q fever. Represent Coxiella burnetii as tiny coccobacillus-like pathogens with a clean intracellular educational backdrop; no animal birth or contamination scenes." } },
+      { "label": { "cn": "類鼻疽", "en": "Melioidosis" }, "prompt": { "cn": "第四類法定傳染病：類鼻疽。代表病原體為類鼻疽伯克氏菌，畫成細長桿菌，帶極端鞭毛與土壤/水滴抽象背景；不畫傷口。", "en": "Category IV notifiable disease: Melioidosis. Represent Burkholderia pseudomallei as slender rods with polar flagella and abstract soil/water-drop background; no wounds." } },
+      { "label": { "cn": "鉤端螺旋體病", "en": "Leptospirosis" }, "prompt": { "cn": "第四類法定傳染病：鉤端螺旋體病。代表病原體為鉤端螺旋體，畫成極細螺旋狀、兩端帶鉤的可愛線條角色；不畫黃疸或病患。", "en": "Category IV notifiable disease: Leptospirosis. Represent Leptospira as very thin spiral line characters with hooked ends; no jaundice or patients." } },
+      { "label": { "cn": "兔熱病", "en": "Tularemia" }, "prompt": { "cn": "第四類法定傳染病：兔熱病。代表病原體為土拉桿菌，畫成小型球桿菌群與森林科普背景；不畫動物病死或狩獵場景。", "en": "Category IV notifiable disease: Tularemia. Represent Francisella tularensis as groups of tiny coccobacilli with a woodland educational backdrop; no dead animals or hunting scenes." } },
+      { "label": { "cn": "疱疹B病毒感染症", "en": "Herpes B virus infection" }, "prompt": { "cn": "第四類法定傳染病：疱疹B病毒感染症。代表病原體為 B 病毒，畫成圓形疱疹病毒，有二十面體核心與包膜；不畫動物咬抓或神經病變。", "en": "Category IV notifiable disease: Herpes B virus infection. Represent Macacine herpesvirus 1 as a round herpesvirus with an icosahedral core and envelope; no animal bites/scratches or nerve pathology." } },
+
+      { "label": { "cn": "新型A型流感", "en": "Novel influenza A" }, "prompt": { "cn": "第五類法定傳染病：新型A型流感。代表病原體為新型 A 型流感病毒，畫成帶 HA/NA 刺突的圓形病毒，表現新興但不可怕的科普角色感。", "en": "Category V notifiable disease: Novel influenza A. Represent a novel Influenza A virus as a round virion with HA/NA spikes, giving an emerging but non-scary educational mascot feel." } },
+      { "label": { "cn": "黃熱病", "en": "Yellow fever" }, "prompt": { "cn": "第五類法定傳染病：黃熱病。代表病原體為黃熱病毒，畫成圓形黃病毒，使用金黃、綠色與熱帶科普元素；可有蚊媒符號但無叮咬。", "en": "Category V notifiable disease: Yellow fever. Represent Yellow fever virus as a round flavivirus using gold, green, and tropical educational elements; mosquito-vector icon allowed, no bites." } },
+      { "label": { "cn": "裂谷熱", "en": "Rift Valley fever" }, "prompt": { "cn": "第五類法定傳染病：裂谷熱。代表病原體為裂谷熱病毒，畫成圓形包膜病毒與分節 RNA 線條，搭配乾淨地景科普元素；不畫動物死亡。", "en": "Category V notifiable disease: Rift Valley fever. Represent Rift Valley fever virus as a round enveloped virion with segmented-RNA lines and clean landscape educational elements; no animal deaths." } },
+      { "label": { "cn": "中東呼吸症候群冠狀病毒感染症", "en": "MERS coronavirus infection" }, "prompt": { "cn": "第五類法定傳染病：中東呼吸症候群冠狀病毒感染症。代表病原體為 MERS 冠狀病毒，畫成有大型冠狀刺突的圓形包膜病毒；不畫駱駝接觸或病患。", "en": "Category V notifiable disease: MERS coronavirus infection. Represent MERS coronavirus as a round enveloped virion with large crown-like spikes; no camel-contact scene or patients." } },
+      { "label": { "cn": "拉薩熱", "en": "Lassa fever" }, "prompt": { "cn": "第五類法定傳染病：拉薩熱。代表病原體為拉薩病毒，畫成 arenavirus，圓形包膜內有砂粒狀核糖體點點；不畫出血或病患。", "en": "Category V notifiable disease: Lassa fever. Represent Lassa virus as an arenavirus with a round envelope and sandy ribosome-like dots inside; no hemorrhage or patients." } },
+      { "label": { "cn": "馬堡病毒出血熱", "en": "Marburg virus disease" }, "prompt": { "cn": "第五類法定傳染病：馬堡病毒出血熱。代表病原體為馬堡病毒，畫成細長絲狀病毒，使用柔和線條與友善表情；不畫出血或恐怖場景。", "en": "Category V notifiable disease: Marburg virus disease. Represent Marburg virus as a long filamentous virion with soft lines and a friendly expression; no hemorrhage or horror imagery." } },
+      { "label": { "cn": "伊波拉病毒感染", "en": "Ebola virus infection" }, "prompt": { "cn": "第五類法定傳染病：伊波拉病毒感染。代表病原體為伊波拉病毒，畫成絲狀彎曲病毒角色，形態可辨識但表情可愛；不畫出血或病患。", "en": "Category V notifiable disease: Ebola virus infection. Represent Ebola virus as a filamentous curved virion character, recognizable but cute; no hemorrhage or patients." } },
+      { "label": { "cn": "立百病毒感染症", "en": "Nipah virus infection" }, "prompt": { "cn": "第五類法定傳染病：立百病毒感染症。代表病原體為立百病毒，畫成包膜副黏液病毒，圓形或略絲狀、表面有柔和刺突；不畫蝙蝠接觸或病患。", "en": "Category V notifiable disease: Nipah virus infection. Represent Nipah virus as an enveloped paramyxovirus, round or slightly filamentous with soft spikes; no bat-contact scene or patients." } }
+    ]
+  },
+  "pathogen_cartoon_style": {
+    "label": {
+      "cn": "卡通風格",
+      "en": "Cartoon Style"
+    },
+    "category": "visual",
+    "options": [
+      { "cn": "美式漫畫吉祥物風格，粗線條、動態表情、明亮撞色", "en": "American comic mascot style with bold outlines, dynamic expressions, and bright contrast colors" },
+      { "cn": "日式 kawaii 科普吉祥物風格，圓潤、可愛、大眼睛", "en": "Japanese kawaii science mascot style, rounded, cute, with large expressive eyes" },
+      { "cn": "日式動畫海報風格，精緻上色、清楚輪廓、柔和高光", "en": "Japanese anime poster style with refined coloring, clean contours, and soft highlights" },
+      { "cn": "少年漫畫風格，誇張速度線、熱血姿勢、但不恐怖", "en": "Shonen manga style with exaggerated speed lines and energetic posing, but not scary" },
+      { "cn": "兒童繪本科普風格，柔和筆觸、溫暖色彩、親切表情", "en": "Children's science picture-book style with soft brushwork, warm colors, and friendly expressions" },
+      { "cn": "3D vinyl toy 公仔風格，圓滑塑膠材質、棚拍打光", "en": "3D vinyl toy figure style with smooth plastic materials and studio lighting" },
+      { "cn": "黏土動畫風格，手作質感、圓潤形體、柔和陰影", "en": "Clay animation style with handmade texture, rounded forms, and soft shadows" },
+      { "cn": "扁平向量海報風格，簡潔形狀、乾淨色塊、圖鑑感", "en": "Flat vector poster style with simple shapes, clean color blocks, and atlas-like clarity" },
+      { "cn": "像素風角色海報，清楚輪廓、復古遊戲感、高可讀性", "en": "Pixel-art character poster with clear silhouettes, retro game feel, and high readability" }
+    ]
+  },
+  "pathogen_poster_composition": {
+    "label": {
+      "cn": "海報構圖",
+      "en": "Poster Composition"
+    },
+    "category": "visual",
+    "options": [
+      { "cn": "中央大型角色海報，四周有乾淨的裝飾性科普元素與留白", "en": "Large central character poster with clean decorative science elements and generous whitespace" },
+      { "cn": "角色卡構圖，主角色置中，旁邊有小圖示、形態放大鏡與非可讀標註區", "en": "Character-card composition with a centered mascot, small icons, morphology magnifier, and non-readable label areas" },
+      { "cn": "公共衛生科普海報構圖，醒目主視覺、清楚分層、避免可讀文字", "en": "Public-health educational poster composition with a strong hero visual, clear layers, and no readable text" },
+      { "cn": "顯微世界舞台構圖，病原體像角色站在抽象細胞與分子舞台上", "en": "Microscopic-world stage composition where the pathogen stands on an abstract cellular and molecular stage" },
+      { "cn": "資訊圖表式海報構圖，主角色搭配簡化形態圖示與裝飾性資料元素", "en": "Infographic poster composition with a main character, simplified morphology icons, and decorative data elements" }
+    ]
+  },
+  "pathogen_personality": {
+    "label": {
+      "cn": "角色個性",
+      "en": "Character Personality"
+    },
+    "category": "character",
+    "options": [
+      { "cn": "調皮但不可怕，像科普展覽裡的角色吉祥物", "en": "Mischievous but not scary, like a mascot in a science exhibition" },
+      { "cn": "呆萌、好奇、像兒童科普書角色", "en": "Goofy, curious, like a children's science-book character" },
+      { "cn": "自信的反派小角色，但表現為幽默與戲劇感，不恐怖", "en": "A confident tiny villain, humorous and theatrical rather than frightening" },
+      { "cn": "害羞、圓潤、柔和，適合教學簡報", "en": "Shy, rounded, and gentle, suitable for teaching slides" },
+      { "cn": "活力十足、像運動隊吉祥物，動態強烈", "en": "Energetic like a sports-team mascot, with strong motion" }
+    ]
+  },
+  "pathogen_pose": {
+    "label": {
+      "cn": "姿勢表情",
+      "en": "Pose & Expression"
+    },
+    "category": "action",
+    "options": [
+      { "cn": "漂浮在畫面中央，微笑揮手，表情可愛且容易親近", "en": "Floating in the center, smiling and waving, cute and approachable" },
+      { "cn": "像海報主角一樣站在聚光燈下，雙手叉腰，表情自信", "en": "Standing under a spotlight like a poster hero, hands on hips, confident expression" },
+      { "cn": "被放大鏡框住，做出驚訝表情，周圍有小型形態圖示", "en": "Framed by a magnifying glass, making a surprised face, with small morphology icons around it" },
+      { "cn": "跳躍或旋轉，帶有速度線與粒子效果，但保持乾淨可愛", "en": "Jumping or spinning with speed lines and particles, while staying clean and cute" },
+      { "cn": "帶著小旗幟或標記牌，但牌面不要生成可讀文字", "en": "Holding a small flag or sign, but the sign must not contain readable text" }
+    ]
+  },
+  "pathogen_palette": {
+    "label": {
+      "cn": "配色",
+      "en": "Palette"
+    },
+    "category": "visual",
+    "options": [
+      { "cn": "乾淨明亮的藍綠色、珊瑚橘與奶白底色", "en": "Clean bright teal, coral orange, and warm off-white" },
+      { "cn": "日式柔和粉彩：櫻花粉、淡紫、薄荷綠與白色", "en": "Soft Japanese pastel palette: sakura pink, lavender, mint green, and white" },
+      { "cn": "美式漫畫高對比：番茄紅、皇家藍、亮黃與黑色粗線", "en": "High-contrast American comic palette: tomato red, royal blue, bright yellow, and bold black outlines" },
+      { "cn": "醫學科普清爽配色：淺藍、白色、青綠與少量橙色重點", "en": "Clean medical-education palette: pale blue, white, teal, and small orange accents" },
+      { "cn": "深色收藏海報配色：靛藍背景、青色光點、溫暖粉橘主體", "en": "Dark collectible-poster palette: indigo background, cyan light dots, warm pink-orange subject" }
+    ]
+  },
+  "pathogen_background": {
+    "label": {
+      "cn": "背景",
+      "en": "Background"
+    },
+    "category": "location",
+    "options": [
+      { "cn": "抽象顯微世界背景，使用柔和網格、圓點與非可讀資料圖形", "en": "Abstract microscopic-world background with soft grids, dots, and non-readable data shapes" },
+      { "cn": "乾淨科普海報背景，留出標題空間但不要生成可讀文字", "en": "Clean educational poster background with title space, but no readable text" },
+      { "cn": "柔和細胞與分子圖案背景，低對比、不搶主角", "en": "Soft cellular and molecular pattern background, low contrast and not competing with the subject" },
+      { "cn": "玩具包裝式背景，彩色幾何圖形與展示台，無品牌標誌", "en": "Toy-packaging-style background with colorful geometric shapes and a display stand, no brand logo" },
+      { "cn": "漫畫爆炸框背景，放射線、半色調點與乾淨邊框", "en": "Comic burst background with radial lines, halftone dots, and clean borders" }
+    ]
+  },
+  "pathogen_finish": {
+    "label": {
+      "cn": "完成質感",
+      "en": "Finish"
+    },
+    "category": "visual",
+    "options": [
+      { "cn": "高解析度、邊緣乾淨、海報級插畫完成度、無浮水印", "en": "High resolution, clean edges, finished poster-quality illustration, no watermark" },
+      { "cn": "專業角色設計稿完成度，主體輪廓清楚，縮圖也容易辨識", "en": "Professional character-design finish, clear silhouette, recognizable even as a thumbnail" },
+      { "cn": "精緻印刷海報質感，色彩飽滿但不刺眼，細節乾淨", "en": "Refined print-poster finish, saturated but not harsh colors, clean details" },
+      { "cn": "玩具公仔渲染質感，柔和棚拍陰影，表面圓滑可愛", "en": "Toy-figure render finish with soft studio shadows and smooth cute surfaces" },
+      { "cn": "扁平向量圖鑑質感，線條一致、形狀清楚、適合簡報", "en": "Flat vector atlas finish with consistent lines, clear shapes, and slide-friendly readability" }
+    ]
+  },
+  "pathogen_negative_prompt": {
+    "label": {
+      "cn": "避免內容",
+      "en": "Negative Prompt"
+    },
+    "category": "other",
+    "options": [
+      { "cn": "血腥、恐怖、病患痛苦、傷口、器官病變、醫療診斷截圖、治療宣稱、實驗步驟、培養皿操作、注射操作、過度擬真顯微照片、亂碼文字、品牌 logo、浮水印", "en": "gore, horror, suffering patients, wounds, diseased organs, medical diagnosis screenshots, treatment claims, lab procedure steps, culture-dish operation, injection operation, overly realistic microscope photo, gibberish text, brand logo, watermark" },
+      { "cn": "寫實感染畫面、血液、皮疹特寫、人體器官、醫院急救場景、病原體培養教學、危險操作、可讀醫療建議、浮水印", "en": "realistic infection scene, blood, rash close-up, human organs, hospital emergency scene, pathogen-culture tutorial, dangerous operation, readable medical advice, watermark" },
+      { "cn": "恐怖怪物、噁心黏液、暴力場景、錯誤醫學符號、過度複雜文字、品牌標誌、低解析度、雜亂構圖", "en": "horror monster, gross slime, violent scene, incorrect medical symbols, overly complex text, brand logo, low resolution, messy composition" }
+    ]
   }
 }
 
@@ -1915,5 +2189,47 @@ export const IMAGE_DEFAULTS = {
   "xmas_theme": {
     "cn": "抽象聖誕樹",
     "en": "an abstract Christmas Tree"
+  },
+  "pathogen_disease": {
+    "label": {
+      "cn": "登革熱",
+      "en": "Dengue fever"
+    },
+    "prompt": {
+      "cn": "第二類法定傳染病：登革熱。代表病原體為登革病毒，畫成圓形包膜病毒，表面有規律蛋白顆粒與柔和刺突。",
+      "en": "Category II notifiable disease: Dengue fever. Represent Dengue virus as a round enveloped virion with orderly surface proteins and soft spikes."
+    }
+  },
+  "pathogen_cartoon_style": {
+    "cn": "日式 kawaii 科普吉祥物風格，圓潤、可愛、大眼睛",
+    "en": "Japanese kawaii science mascot style, rounded, cute, with large expressive eyes"
+  },
+  "pathogen_poster_composition": {
+    "cn": "中央大型角色海報，四周有乾淨的裝飾性科普元素與留白",
+    "en": "Large central character poster with clean decorative science elements and generous whitespace"
+  },
+  "pathogen_personality": {
+    "cn": "調皮但不可怕，像科普展覽裡的角色吉祥物",
+    "en": "Mischievous but not scary, like a mascot in a science exhibition"
+  },
+  "pathogen_pose": {
+    "cn": "漂浮在畫面中央，微笑揮手，表情可愛且容易親近",
+    "en": "Floating in the center, smiling and waving, cute and approachable"
+  },
+  "pathogen_palette": {
+    "cn": "乾淨明亮的藍綠色、珊瑚橘與奶白底色",
+    "en": "Clean bright teal, coral orange, and warm off-white"
+  },
+  "pathogen_background": {
+    "cn": "抽象顯微世界背景，使用柔和網格、圓點與非可讀資料圖形",
+    "en": "Abstract microscopic-world background with soft grids, dots, and non-readable data shapes"
+  },
+  "pathogen_finish": {
+    "cn": "高解析度、邊緣乾淨、海報級插畫完成度、無浮水印",
+    "en": "High resolution, clean edges, finished poster-quality illustration, no watermark"
+  },
+  "pathogen_negative_prompt": {
+    "cn": "血腥、恐怖、病患痛苦、傷口、器官病變、醫療診斷截圖、治療宣稱、實驗步驟、培養皿操作、注射操作、過度擬真顯微照片、亂碼文字、品牌 logo、浮水印",
+    "en": "gore, horror, suffering patients, wounds, diseased organs, medical diagnosis screenshots, treatment claims, lab procedure steps, culture-dish operation, injection operation, overly realistic microscope photo, gibberish text, brand logo, watermark"
   }
 }

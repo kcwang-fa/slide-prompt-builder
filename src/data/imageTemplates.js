@@ -4,6 +4,8 @@ export const IMAGE_TEMPLATE_TAGS = [
   "人物",
   "攝影",
   "產品",
+  "病原體",
+  "醫學",
   "建築",
   "圖表",
   "卡通",
@@ -830,6 +832,77 @@ export const IMAGE_TEMPLATES = [
       "產品",
       "創意",
       "攝影"
+    ],
+    "language": [
+      "cn",
+      "en"
+    ]
+  },
+  {
+    "id": "tpl_pathogen_cartoon_poster",
+    "name": {
+      "cn": "病原體卡通海報",
+      "en": "Pathogen Cartoon Poster"
+    },
+    "content": {
+      "cn": "### 病原體卡通海報\n請生成一張可直接用於 Nano Banana 的病原體卡通海報主視覺。畫面應具備科普教育感、角色吸引力與高完成度海報構圖。\n\n**疾病、代表病原體與傳染途徑:** {{pathogen_disease}}\n\n**卡通風格:** {{pathogen_cartoon_style}}\n\n**海報構圖:** {{pathogen_poster_composition}}\n\n**角色個性:** {{pathogen_personality}}\n\n**姿勢與表情:** {{pathogen_pose}}\n\n**配色:** {{pathogen_palette}}\n\n**背景:** {{pathogen_background}}\n\n**完成質感:** {{pathogen_finish}}\n\n**畫幅:** {{ratio}}\n\n**科學與安全要求:** 保留代表性形態特徵與傳染途徑視覺符號，但以可愛、非恐怖、非血腥的方式表現；不要呈現病患、傷口、血液、器官病變、臨床診斷、治療建議或實驗操作步驟；如果疾病可能由多種病原造成，請畫成代表性病原體群像並避免暗示只有單一病原或單一傳染途徑。\n\n**避免內容:** {{pathogen_negative_prompt}}",
+      "en": "### Pathogen Cartoon Poster\nCreate a high-quality cartoon pathogen poster visual for Nano Banana image generation. The result should feel educational, character-driven, and polished like a finished poster.\n\n**Disease, Representative Pathogen & Transmission Route:** {{pathogen_disease}}\n\n**Cartoon Style:** {{pathogen_cartoon_style}}\n\n**Poster Composition:** {{pathogen_poster_composition}}\n\n**Character Personality:** {{pathogen_personality}}\n\n**Pose & Expression:** {{pathogen_pose}}\n\n**Color Palette:** {{pathogen_palette}}\n\n**Background:** {{pathogen_background}}\n\n**Finish:** {{pathogen_finish}}\n\n**Aspect Ratio:** {{ratio}}\n\n**Science & Safety Requirements:** Preserve representative morphology and transmission-route symbols, but present them in a cute, non-horror, non-gory way. Do not show patients, wounds, blood, diseased organs, clinical diagnosis, treatment claims, or lab procedure steps. If the disease can involve multiple pathogens, depict a representative pathogen group and avoid implying it has only one cause or one transmission route.\n\n**Negative Prompt:** {{pathogen_negative_prompt}}"
+    },
+    "imageUrl": "/previews/pathogen-cartoon-poster.png",
+    "author": "官方",
+    "selections": {
+      "pathogen_disease": {
+        "label": {
+          "cn": "登革熱",
+          "en": "Dengue fever"
+        },
+        "prompt": {
+          "cn": "第二類法定傳染病：登革熱。代表病原體為登革病毒，畫成圓形包膜病毒，表面有規律蛋白顆粒與柔和刺突。",
+          "en": "Category II notifiable disease: Dengue fever. Represent Dengue virus as a round enveloped virion with orderly surface proteins and soft spikes."
+        }
+      },
+      "pathogen_cartoon_style": {
+        "cn": "日式 kawaii 科普吉祥物風格",
+        "en": "Japanese kawaii science mascot style"
+      },
+      "pathogen_poster_composition": {
+        "cn": "中央大型角色海報，四周有乾淨的裝飾性科普元素與留白",
+        "en": "Large central character poster with clean decorative science elements and generous whitespace"
+      },
+      "pathogen_personality": {
+        "cn": "調皮但不可怕，像科普展覽裡的角色吉祥物",
+        "en": "Mischievous but not scary, like a mascot in a science exhibition"
+      },
+      "pathogen_pose": {
+        "cn": "漂浮在畫面中央，微笑揮手，表情可愛且容易親近",
+        "en": "Floating in the center, smiling and waving, cute and approachable"
+      },
+      "pathogen_palette": {
+        "cn": "乾淨明亮的藍綠色、珊瑚橘與奶白底色",
+        "en": "Clean bright teal, coral orange, and warm off-white"
+      },
+      "pathogen_background": {
+        "cn": "抽象顯微世界背景，使用柔和網格、圓點與非可讀資料圖形",
+        "en": "Abstract microscopic-world background with soft grids, dots, and non-readable data shapes"
+      },
+      "pathogen_finish": {
+        "cn": "高解析度、邊緣乾淨、海報級插畫完成度、無浮水印",
+        "en": "High resolution, clean edges, finished poster-quality illustration, no watermark"
+      },
+      "ratio": {
+        "cn": "3:4直式構圖",
+        "en": "3:4 Vertical"
+      },
+      "pathogen_negative_prompt": {
+        "cn": "血腥、恐怖、病患痛苦、傷口、器官病變、醫療診斷截圖、治療宣稱、實驗步驟、培養皿操作、注射操作、過度擬真顯微照片、亂碼文字、品牌 logo、浮水印",
+        "en": "gore, horror, suffering patients, wounds, diseased organs, medical diagnosis screenshots, treatment claims, lab procedure steps, culture-dish operation, injection operation, overly realistic microscope photo, gibberish text, brand logo, watermark"
+      }
+    },
+    "tags": [
+      "病原體",
+      "醫學",
+      "卡通",
+      "創意"
     ],
     "language": [
       "cn",

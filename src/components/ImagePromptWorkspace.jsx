@@ -7,6 +7,7 @@ import {
   getImageSelectionValue,
   getImageTemplateName,
   getImageTemplateVariables,
+  localizeImageOptionLabel,
   localizeImageValue,
 } from '../lib/imagePrompt.js'
 
@@ -14,6 +15,8 @@ const TAG_LABELS = {
   人物: { cn: '人物', en: 'People' },
   攝影: { cn: '攝影', en: 'Photo' },
   產品: { cn: '產品', en: 'Product' },
+  醫學: { cn: '醫學', en: 'Medicine' },
+  病原體: { cn: '病原體', en: 'Pathogens' },
   建築: { cn: '建築', en: 'Architecture' },
   圖表: { cn: '圖表', en: 'Diagram' },
   卡通: { cn: '卡通', en: 'Cartoon' },
@@ -70,7 +73,7 @@ function ImageVariableField({ field, template, selections, language, onChange })
           </option>
           {options.map((option, index) => (
             <option key={`${field.uniqueKey}-${index}`} value={index}>
-              {localizeImageValue(option, language)}
+              {localizeImageOptionLabel(option, language)}
             </option>
           ))}
         </select>

@@ -1,10 +1,23 @@
-import { IMAGE_DEFAULTS } from '../data/imageBanks.js'
+import { IMAGE_DEFAULTS, PATHOGEN_TRANSMISSION_HINTS } from '../data/imageBanks.js'
 
 export function localizeImageValue(value, language) {
   if (value === undefined || value === null) return ''
   if (typeof value === 'string') return value
   if (typeof value !== 'object') return String(value)
+  if (value.prompt) {
+    const prompt = localizeImageValue(value.prompt, language)
+    const diseaseName = localizeImageValue(value.label, 'cn')
+    const transmissionHint = localizeImageValue(PATHOGEN_TRANSMISSION_HINTS[diseaseName], language)
+    return [prompt, transmissionHint].filter(Boolean).join('\n')
+  }
   return value[language] || value.cn || value.en || value['zh-tw'] || Object.values(value).find(Boolean) || ''
+}
+
+export function localizeImageOptionLabel(value, language) {
+  if (value && typeof value === 'object' && value.label) {
+    return localizeImageValue(value.label, language)
+  }
+  return localizeImageValue(value, language)
 }
 
 export function getImageTemplateLanguage(template, language) {
